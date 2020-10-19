@@ -1,16 +1,19 @@
 package com.technicaltest.app.ui.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.technicaltest.app.R
+import com.technicaltest.app.extensions.getIdFromUrl
 import com.technicaltest.app.models.Pokemon
 
 
-class PokemonAdapter(private val items: List<Pokemon>) :
+class PokemonAdapter(private val context : Context, private val items: List<Pokemon>) :
 
     RecyclerView.Adapter<PokemonAdapter.PostViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -19,7 +22,9 @@ class PokemonAdapter(private val items: List<Pokemon>) :
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        holder.img.setImageResource(android.R.drawable.ic_delete)
+        val pokemon = items[position]
+        val url = String.format(context.getString(R.string.url_pokemon_image), pokemon.url?.getIdFromUrl())
+        Glide.with(context).load(url).into(holder.img)
     }
 
     override fun getItemCount(): Int {

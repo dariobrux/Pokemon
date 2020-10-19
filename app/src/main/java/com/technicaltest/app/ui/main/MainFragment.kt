@@ -1,5 +1,6 @@
 package com.technicaltest.app.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,14 +17,16 @@ import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainFragment : Fragment() {
 
-    private val pokemonList = mutableListOf<Pokemon>()
-    private val adapter : PokemonAdapter = PokemonAdapter(pokemonList)
+    private lateinit var adapter : PokemonAdapter
 
-    companion object {
-        fun newInstance() = MainFragment()
-    }
+    private val pokemonList = mutableListOf<Pokemon>()
 
     private lateinit var viewModel: MainViewModel
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        adapter = PokemonAdapter(requireContext(), pokemonList)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.main_fragment, container, false)
@@ -45,5 +48,9 @@ class MainFragment : Fragment() {
         recycler.setHasFixedSize(true)
         recycler.layoutManager = LinearLayoutManager(requireContext())
         recycler.adapter = adapter
+    }
+
+    companion object {
+        fun newInstance() = MainFragment()
     }
 }
