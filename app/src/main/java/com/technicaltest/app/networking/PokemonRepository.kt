@@ -13,6 +13,7 @@ class PokemonRepository {
 
     fun getPokemon(): MutableLiveData<DataInfo> {
         val mutableLiveData: MutableLiveData<DataInfo> = MutableLiveData<DataInfo>()
+
         pokemonAPI.pokemon()?.enqueue(object : Callback<DataInfo> {
             override fun onResponse(call: Call<DataInfo>?, response: Response<DataInfo>) {
                 if (response.isSuccessful) {

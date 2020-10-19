@@ -7,12 +7,12 @@ import android.widget.ImageView
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.technicaltest.app.R
-import com.technicaltest.app.models.DataInfo
+import com.technicaltest.app.models.Pokemon
 
 
-class PostsAdapter(private val items: List<DataInfo>) :
+class PokemonAdapter(private val items: List<Pokemon>) :
 
-    RecyclerView.Adapter<PostsAdapter.PostViewHolder>() {
+    RecyclerView.Adapter<PokemonAdapter.PostViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.item_pokemon, parent, false)
         return PostViewHolder(view)

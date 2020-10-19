@@ -9,18 +9,18 @@ import com.technicaltest.app.networking.PokemonRepository
 
 class MainViewModel : ViewModel() {
 
-    private var mutableLiveData: MutableLiveData<DataInfo>? = null
+    private var pokemonLiveData: MutableLiveData<DataInfo>? = null
     private var pokemonRepository: PokemonRepository? = null
 
     fun init() {
-        if (mutableLiveData != null) {
+        if (pokemonLiveData != null) {
             return
         }
         pokemonRepository = PokemonRepository.instance
-        mutableLiveData = pokemonRepository?.getPokemon()
+        pokemonLiveData = pokemonRepository?.getPokemon()
     }
 
     fun getPokemonRepository(): LiveData<DataInfo>? {
-        return mutableLiveData
+        return pokemonLiveData
     }
 }
