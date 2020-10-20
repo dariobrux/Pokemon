@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="regular_card_height">256dp</dimen>
+    <dimen name="regular_radius">16dp</dimen>
+    <dimen name="regular_space">8dp</dimen>
+    <dimen name="regular_height">256dp</dimen>
+</resources>
