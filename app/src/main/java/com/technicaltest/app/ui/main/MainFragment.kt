@@ -9,9 +9,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.technicaltest.app.R
 import com.technicaltest.app.models.Pokemon
 import com.technicaltest.app.ui.adapters.PokemonAdapter
+import com.technicaltest.app.ui.utils.VerticalSpaceItemDecoration
 import kotlinx.android.synthetic.main.main_fragment.*
 
 
@@ -45,9 +48,11 @@ class MainFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recycler.setHasFixedSize(true)
-        recycler.layoutManager = LinearLayoutManager(requireContext())
-        recycler.adapter = adapter
+        recycler?.let {
+            it.addItemDecoration(VerticalSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_space)))
+            it.layoutManager = StaggeredGridLayoutManager(2, RecyclerView.VERTICAL)
+            it.adapter = adapter
+        }
     }
 
     companion object {
