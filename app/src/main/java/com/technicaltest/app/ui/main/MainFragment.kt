@@ -16,7 +16,7 @@ import com.technicaltest.app.ui.adapters.PokemonAdapter
 import com.technicaltest.app.ui.utils.VerticalSpaceItemDecoration
 import kotlinx.android.synthetic.main.main_fragment.*
 
-class MainFragment : Fragment(), XRecyclerView.LoadingListener {
+class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.OnPokemonSelectedListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter : PokemonAdapter
@@ -25,7 +25,7 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        adapter = PokemonAdapter(requireContext(), pokemonList)
+        adapter = PokemonAdapter(requireContext(), pokemonList, this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -60,6 +60,10 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener {
         }
     }
 
+    override fun onPokemonSelected(pokemon: Pokemon) {
+        // TODO
+    }
+
     override fun onRefresh() {
         // Do nothing
     }
@@ -71,4 +75,5 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener {
     companion object {
         fun newInstance() = MainFragment()
     }
+
 }
