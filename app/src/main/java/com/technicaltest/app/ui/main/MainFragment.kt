@@ -41,7 +41,6 @@ class MainFragment : Fragment() {
 
         viewModel.init()
         viewModel.getPokemonRepository()?.observe(this) { dataInfo ->
-            Log.d("Pokemon", dataInfo?.pokemonList?.firstOrNull()?.name ?: "")
             pokemonList.addAll(dataInfo.pokemonList?: emptyList())
             adapter.notifyDataSetChanged()
         }
