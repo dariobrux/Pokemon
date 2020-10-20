@@ -15,11 +15,11 @@ class PokemonRepository {
 
     private val pokemonAPI: PokemonAPI = RetrofitService.createService(PokemonAPI::class.java)
 
-    fun getPokemon(): MutableLiveData<DataInfo> {
+    fun getPokemon(offset: Int, limit: Int): MutableLiveData<DataInfo> {
         val mutableLiveData: MutableLiveData<DataInfo> = MutableLiveData<DataInfo>()
 
         CoroutineScope(Dispatchers.IO).launch {
-            val response = pokemonAPI.pokemon()
+            val response = pokemonAPI.pokemon(offset, limit)
 
             withContext(Dispatchers.Main) {
                 mutableLiveData.value = if (response?.isSuccessful == true) {
