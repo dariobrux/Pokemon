@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.technicaltest.app.models.DataInfo
 import com.technicaltest.app.networking.PokemonRepository
 
-
 class MainViewModel : ViewModel() {
 
     private var pokemonLiveData: MutableLiveData<DataInfo>? = null
