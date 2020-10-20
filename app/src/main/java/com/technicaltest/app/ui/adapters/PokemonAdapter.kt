@@ -25,10 +25,13 @@ class PokemonAdapter(private val context : Context, private val items: List<Poke
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val pokemon = items[position]
-        val url = String.format(context.getString(R.string.url_pokemon_image), pokemon.url?.getIdFromUrl())
+
+        val id = pokemon.url?.getIdFromUrl() ?: -1
+        val url = String.format(context.getString(R.string.url_pokemon_image), id)
         Glide.with(context).load(url).into(holder.img)
 
         holder.txtName.text = pokemon.name?.capitalize(Locale.getDefault())
+        holder.txtNumber.text = id.toString()
     }
 
     override fun getItemCount(): Int {
@@ -38,5 +41,6 @@ class PokemonAdapter(private val context : Context, private val items: List<Poke
     class PostViewHolder(@NonNull itemView: View) : RecyclerView.ViewHolder(itemView) {
         var img: ImageView = itemView.findViewById(R.id.img)
         var txtName: TextView = itemView.findViewById(R.id.txtName)
+        var txtNumber: TextView = itemView.findViewById(R.id.txtNumber)
     }
 }
