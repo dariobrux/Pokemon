@@ -41,7 +41,7 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener {
     }
 
     private fun getPokemonList() {
-        viewModel.getPokemonRepository()?.observe(this) { dataInfo ->
+        viewModel.getPokemon()?.observe(this) { dataInfo ->
             pokemonList.addAll(dataInfo.pokemonList ?: emptyList())
             adapter.notifyDataSetChanged()
 

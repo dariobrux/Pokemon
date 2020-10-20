@@ -12,7 +12,6 @@ class DataInfo {
     var next: String? = ""
     var previous: String? = ""
 
-
     @SerializedName("results")
     var pokemonList: List<Pokemon>? = null
 }

@@ -2,6 +2,7 @@ package com.technicaltest.app.networking
 
 import androidx.lifecycle.MutableLiveData
 import com.technicaltest.app.models.DataInfo
+import com.technicaltest.app.models.PokemonData
 import com.technicaltest.app.networking.api.PokemonAPI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,10 +17,28 @@ class PokemonRepository {
     private val pokemonAPI: PokemonAPI = RetrofitService.createService(PokemonAPI::class.java)
 
     fun getPokemon(offset: Int, limit: Int): MutableLiveData<DataInfo> {
-        val mutableLiveData: MutableLiveData<DataInfo> = MutableLiveData<DataInfo>()
+        val mutableLiveData: MutableLiveData<DataInfo> = MutableLiveData()
 
         CoroutineScope(Dispatchers.IO).launch {
             val response = pokemonAPI.pokemon(offset, limit)
+
+            withContext(Dispatchers.Main) {
+                mutableLiveData.value = if (response?.isSuccessful == true) {
+                    response.body()
+                } else {
+                    null
+                }
+            }
+        }
+
+        return mutableLiveData
+    }
+
+    fun getPokemonData(url:String) : MutableLiveData<PokemonData> {
+        val mutableLiveData: MutableLiveData<PokemonData> = MutableLiveData()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = pokemonAPI.pokemonData(url)
 
             withContext(Dispatchers.Main) {
                 mutableLiveData.value = if (response?.isSuccessful == true) {
