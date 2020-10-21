@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class MainRepository {
 
@@ -21,7 +22,7 @@ class MainRepository {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            val dataInfo : DataInfo?
+            var dataInfo: DataInfo? = null
 
             // Read first the local pokemon list from database.
             val pokemonDatabase = PokemonDatabase.getInstance(context)
@@ -29,23 +30,32 @@ class MainRepository {
 
             // If it is not empty, read and pass the data retrieved from database.
             if (!localPokemonList.isNullOrEmpty()) {
+                Timber.d("Read the pokemon list from the database.")
                 dataInfo = DataInfo().apply {
                     pokemonList = localPokemonList
                 }
             } else {
 
+                Timber.d("Trying to retrieve the pokemon list from url.")
+
                 // If the database is empty, download the pokemon from the online API and
                 // store them in the database.
-                val response = pokemonAPI.pokemon(offset, limit)
-                dataInfo = if (response?.isSuccessful == true) {
-                    response.body()
-                } else {
-                    null
-                }
+                kotlin.runCatching {
+                    pokemonAPI.pokemon(offset, limit)
+                }.onSuccess { response ->
+                    dataInfo = if (response?.isSuccessful == true) {
+                        response.body()
+                    } else {
+                        null
+                    }
 
-                // Store in the database.
-                dataInfo?.pokemonList?.let { pokemonList ->
-                    pokemonDatabase.pokemonDao().insertPokemonList(pokemonList)
+                    // Store in the database.
+                    dataInfo?.pokemonList?.let { pokemonList ->
+                        Timber.d("Insert the pokemon list in the database.")
+                        pokemonDatabase.pokemonDao().insertPokemonList(pokemonList)
+                    }
+                }.onFailure {
+                    Timber.w("Problems while retrieve the pokemon list.")
                 }
             }
 
