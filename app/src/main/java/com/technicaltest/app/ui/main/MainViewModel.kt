@@ -1,16 +1,15 @@
 package com.technicaltest.app.ui.main
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.technicaltest.app.models.DataInfo
-import com.technicaltest.app.models.PokemonData
-import com.technicaltest.app.networking.PokemonRepository
 
 class MainViewModel : ViewModel() {
 
-    private var pokemonRepository: PokemonRepository? = null
-
+    private var context: Context? = null
+    private var mainRepository: MainRepository? = null
     private var pokemonLiveData: MutableLiveData<DataInfo>? = null
 
     /**
@@ -23,16 +22,19 @@ class MainViewModel : ViewModel() {
      */
     private var limit = 300
 
-    fun init() {
-        if (pokemonRepository != null) {
+    fun init(context: Context) {
+        if (mainRepository != null) {
             return
         }
-        pokemonRepository = PokemonRepository.instance
+        this.context = context
+        mainRepository = MainRepository.instance
     }
 
     fun getPokemon(): LiveData<DataInfo>? {
-        pokemonLiveData = pokemonRepository?.getPokemon(offset, limit)
-        offset += limit
+        context?.let {
+            pokemonLiveData = mainRepository?.getPokemon(it, offset, limit)
+            offset += limit
+        }
         return pokemonLiveData
     }
 }

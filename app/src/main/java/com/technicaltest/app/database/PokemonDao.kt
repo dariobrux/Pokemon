@@ -22,8 +22,8 @@ interface PokemonDao {
      * Get the list of all the pokemon stored.
      * @return the list with all pokemon.
      */
-    @Query("Select * from pokemon")
-    fun getPokemonList() : List<Pokemon>
+    @Query("Select * from pokemon limit :limit offset :offset")
+    fun getPokemonList(offset: Int, limit: Int): List<Pokemon>
 
     /**
      * Add a pokemon in the database.
@@ -31,5 +31,5 @@ interface PokemonDao {
      * Use the replacing strategy to override each existing item.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPokemon(pokemon: Pokemon)
+    fun insertPokemonList(pokemonList: List<Pokemon>)
 }

@@ -1,5 +1,6 @@
 package com.technicaltest.app.models
 
+import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
@@ -17,7 +18,8 @@ import java.io.Serializable
 class Pokemon : Serializable {
 
     @PrimaryKey
-    var name: String? = ""
+    @NonNull
+    var name: String = ""
 
     var url: String? = ""
 }

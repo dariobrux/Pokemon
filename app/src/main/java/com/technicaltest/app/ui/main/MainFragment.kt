@@ -16,7 +16,17 @@ import com.technicaltest.app.models.Pokemon
 import com.technicaltest.app.ui.adapters.PokemonAdapter
 import com.technicaltest.app.ui.utils.VerticalSpaceItemDecoration
 import kotlinx.android.synthetic.main.main_fragment.*
+import timber.log.Timber
 
+/**
+ *
+ * Created by Dario Bruzzese on 21/10/2020.
+ *
+ * This is the main fragment, where the layout shows
+ * the list of all pokemon. It limits the items to display
+ * each time. So, after having scrolled the list, an HTTP request must be
+ * done to retrieve another group of pokemon.
+ */
 class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.OnPokemonSelectedListener {
 
     private lateinit var viewModel: MainViewModel
@@ -37,12 +47,13 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.O
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        viewModel.init()
+        viewModel.init(requireContext())
         getPokemonList()
     }
 
     private fun getPokemonList() {
         viewModel.getPokemon()?.observe(this.viewLifecycleOwner) { dataInfo ->
+            Timber.d("Observer the dataInfo object. It contains ${dataInfo.pokemonList?.size ?: 0} pokemon")
             pokemonList.addAll(dataInfo.pokemonList ?: emptyList())
             adapter.notifyDataSetChanged()
 
@@ -74,9 +85,4 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.O
     override fun onLoadMore() {
         getPokemonList()
     }
-
-    companion object {
-        fun newInstance() = MainFragment()
-    }
-
 }
