@@ -30,7 +30,7 @@ import timber.log.Timber
 class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.OnPokemonSelectedListener {
 
     private lateinit var viewModel: MainViewModel
-    private lateinit var adapter : PokemonAdapter
+    private lateinit var adapter: PokemonAdapter
 
     private val pokemonList = mutableListOf<Pokemon>()
 
