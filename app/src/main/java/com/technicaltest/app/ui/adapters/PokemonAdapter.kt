@@ -15,12 +15,19 @@ import com.technicaltest.app.models.Pokemon
 import java.util.*
 
 
-class PokemonAdapter(private val context : Context, private val items: List<Pokemon>) :
+class PokemonAdapter(private val context: Context, private val items: List<Pokemon>, private val listener: OnPokemonSelectedListener?) : RecyclerView.Adapter<PokemonAdapter.PostViewHolder>() {
 
-    RecyclerView.Adapter<PokemonAdapter.PostViewHolder>() {
+    interface OnPokemonSelectedListener {
+        fun onPokemonSelected(pokemon : Pokemon)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.item_pokemon, parent, false)
-        return PostViewHolder(view)
+        val holder =  PostViewHolder(view)
+        view.setOnClickListener {
+            listener?.onPokemonSelected(items[holder.adapterPosition])
+        }
+        return holder
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
