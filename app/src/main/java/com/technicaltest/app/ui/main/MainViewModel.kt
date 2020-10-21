@@ -20,7 +20,7 @@ class MainViewModel : ViewModel() {
     /**
      * Max number of items to download in once.
      */
-    private var limit = 300
+    private var limit = 20
 
     fun init(context: Context) {
         if (mainRepository != null) {
