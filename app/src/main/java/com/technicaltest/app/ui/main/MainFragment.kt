@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jcodecraeer.xrecyclerview.XRecyclerView
@@ -41,7 +42,7 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.O
     }
 
     private fun getPokemonList() {
-        viewModel.getPokemon()?.observe(this) { dataInfo ->
+        viewModel.getPokemon()?.observe(this.viewLifecycleOwner) { dataInfo ->
             pokemonList.addAll(dataInfo.pokemonList ?: emptyList())
             adapter.notifyDataSetChanged()
 
@@ -61,7 +62,9 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.O
     }
 
     override fun onPokemonSelected(pokemon: Pokemon) {
-        // TODO
+        NavHostFragment.findNavController(this).navigate(R.id.action_mainFragment_to_infoFragment, Bundle().apply {
+            putSerializable("pokemon", pokemon)
+        })
     }
 
     override fun onRefresh() {
