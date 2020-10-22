@@ -15,9 +15,19 @@ import timber.log.Timber
 
 class MainRepository {
 
+    /**
+     * Increment it to display the next set of items.
+     */
+    private var offset = 0
+
+    /**
+     * Max number of items to download in once.
+     */
+    private var limit = 20
+
     private val pokemonAPI: PokemonAPI = RetrofitService.createService(PokemonAPI::class.java)
 
-    fun getPokemon(context: Context, offset: Int, limit: Int): MutableLiveData<DataInfo> {
+    fun getPokemon(context: Context): MutableLiveData<DataInfo> {
         val mutableLiveData: MutableLiveData<DataInfo> = MutableLiveData()
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -60,7 +70,9 @@ class MainRepository {
             }
 
             withContext(Dispatchers.Main) {
-                mutableLiveData.value = dataInfo
+                mutableLiveData.value = dataInfo?.also {
+                    offset += limit
+                }
             }
         }
 

@@ -12,16 +12,6 @@ class MainViewModel : ViewModel() {
     private var mainRepository: MainRepository? = null
     private var pokemonLiveData: MutableLiveData<DataInfo>? = null
 
-    /**
-     * Increment it to display the next set of items.
-     */
-    private var offset = 0
-
-    /**
-     * Max number of items to download in once.
-     */
-    private var limit = 20
-
     fun init(context: Context) {
         if (mainRepository != null) {
             return
@@ -32,8 +22,7 @@ class MainViewModel : ViewModel() {
 
     fun getPokemon(): LiveData<DataInfo>? {
         context?.let {
-            pokemonLiveData = mainRepository?.getPokemon(it, offset, limit)
-            offset += limit
+            pokemonLiveData = mainRepository?.getPokemon(it)
         }
         return pokemonLiveData
     }

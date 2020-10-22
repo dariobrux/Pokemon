@@ -53,8 +53,8 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.O
 
     private fun getPokemonList() {
         viewModel.getPokemon()?.observe(this.viewLifecycleOwner) { dataInfo ->
-            Timber.d("Observer the dataInfo object. It contains ${dataInfo.pokemonList?.size ?: 0} pokemon")
-            pokemonList.addAll(dataInfo.pokemonList ?: emptyList())
+            Timber.d("Observer the dataInfo object. It contains ${dataInfo?.pokemonList?.size ?: 0} pokemon")
+            pokemonList.addAll(dataInfo?.pokemonList ?: emptyList())
             adapter.notifyDataSetChanged()
 
             // Tells to the recyclerView that the items are loaded,
