@@ -28,6 +28,9 @@ import timber.log.Timber
  * the list of all pokemon. It limits the items to display
  * each time. So, after having scrolled the list, an HTTP request must be
  * done to retrieve another group of pokemon.
+ *
+ * I declare this class with AndroidEntryPoint annotation, to tell the activity that
+ * we will be injecting dependency here. Without this, the DI won't work.
  */
 
 @AndroidEntryPoint
@@ -55,10 +58,9 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.O
     }
 
     private fun getPokemonList() {
-        viewModel.pokemonLiveData.observe(this.viewLifecycleOwner) {  resource ->
-            val dataInfo = resource.data
-            Timber.d("Observer the dataInfo object. It contains ${dataInfo?.pokemonList?.size ?: 0} pokemon")
-            pokemonList.addAll(dataInfo?.pokemonList ?: emptyList())
+        viewModel.pokemonList.observe(this.viewLifecycleOwner) {
+            Timber.d("Observer the dataInfo object. It contains ${it.data?.pokemonList?.size ?: 0} pokemon")
+            pokemonList.addAll(it.data?.pokemonList ?: emptyList())
             adapter.notifyDataSetChanged()
 
             // Tells the recyclerView that the items are loaded,

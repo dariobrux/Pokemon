@@ -7,12 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.technicaltest.app.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class InfoFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = InfoFragment()
-    }
 
     private lateinit var viewModel: InfoViewModel
 
