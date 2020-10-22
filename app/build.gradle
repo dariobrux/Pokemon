@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -50,7 +51,7 @@ dependencies {
     // Glide
     // https://github.com/bumptech/glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    kapt 'com.github.bumptech.glide:compiler:4.11.0'
 
     // Navigation Component
     // https://developer.android.com/guide/navigation/navigation-getting-started
@@ -71,9 +72,18 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
+    // Room
+    // https://medium.com/mindorks/using-room-database-android-jetpack-675a89a0e942
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
     // Rx
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
+
+    // Timber
+    // https://github.com/JakeWharton/timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // XRecyclerView
     // https://github.com/XRecyclerView/XRecyclerView

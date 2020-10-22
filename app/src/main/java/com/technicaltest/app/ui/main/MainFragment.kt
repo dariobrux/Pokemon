@@ -16,11 +16,21 @@ import com.technicaltest.app.models.Pokemon
 import com.technicaltest.app.ui.adapters.PokemonAdapter
 import com.technicaltest.app.ui.utils.VerticalSpaceItemDecoration
 import kotlinx.android.synthetic.main.main_fragment.*
+import timber.log.Timber
 
+/**
+ *
+ * Created by Dario Bruzzese on 21/10/2020.
+ *
+ * This is the main fragment, where the layout shows
+ * the list of all pokemon. It limits the items to display
+ * each time. So, after having scrolled the list, an HTTP request must be
+ * done to retrieve another group of pokemon.
+ */
 class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.OnPokemonSelectedListener {
 
     private lateinit var viewModel: MainViewModel
-    private lateinit var adapter : PokemonAdapter
+    private lateinit var adapter: PokemonAdapter
 
     private val pokemonList = mutableListOf<Pokemon>()
 
@@ -37,18 +47,32 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.O
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        viewModel.init()
+        viewModel.init(requireContext())
         getPokemonList()
     }
 
     private fun getPokemonList() {
         viewModel.getPokemon()?.observe(this.viewLifecycleOwner) { dataInfo ->
-            pokemonList.addAll(dataInfo.pokemonList ?: emptyList())
+            Timber.d("Observer the dataInfo object. It contains ${dataInfo?.pokemonList?.size ?: 0} pokemon")
+            pokemonList.addAll(dataInfo?.pokemonList ?: emptyList())
             adapter.notifyDataSetChanged()
 
-            // Tells to the recyclerView that the items are loaded,
+            // Tells the recyclerView that the items are loaded,
             // to continue to use the loadMore functionality.
             recycler?.loadMoreComplete()
+        }
+    }
+
+    private fun refreshPokemonList() {
+        viewModel.refreshPokemon()?.observe(this.viewLifecycleOwner) { dataInfo ->
+            Timber.d("Refresh the pokemon list. Displayed ${dataInfo?.pokemonList ?: 0} pokemon.")
+
+            pokemonList.clear()
+            pokemonList.addAll(dataInfo?.pokemonList ?: emptyList())
+            adapter.notifyDataSetChanged()
+
+            // Tells the recyclerView that the items are refreshed.
+            recycler?.refreshComplete()
         }
     }
 
@@ -68,15 +92,10 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.O
     }
 
     override fun onRefresh() {
-        // Do nothing
+        refreshPokemonList()
     }
 
     override fun onLoadMore() {
         getPokemonList()
     }
-
-    companion object {
-        fun newInstance() = MainFragment()
-    }
-
 }

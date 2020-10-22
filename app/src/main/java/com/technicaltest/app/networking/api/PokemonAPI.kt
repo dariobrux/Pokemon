@@ -9,6 +9,7 @@ import retrofit2.http.Query
 import retrofit2.http.Url
 
 interface PokemonAPI {
+
     @GET("api/v2/pokemon")
     suspend fun pokemon(@Query("offset") offset: Int, @Query("limit") limit: Int): Response<DataInfo>?
 
