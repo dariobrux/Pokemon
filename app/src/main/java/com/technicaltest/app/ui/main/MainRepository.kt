@@ -27,6 +27,10 @@ class MainRepository {
 
     private val pokemonAPI: PokemonAPI = RetrofitService.createService(PokemonAPI::class.java)
 
+    fun resetOffset() {
+        offset = 0
+    }
+
     fun getPokemon(context: Context): MutableLiveData<DataInfo> {
         val mutableLiveData: MutableLiveData<DataInfo> = MutableLiveData()
 

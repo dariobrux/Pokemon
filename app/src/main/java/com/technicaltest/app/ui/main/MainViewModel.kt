@@ -26,4 +26,9 @@ class MainViewModel : ViewModel() {
         }
         return pokemonLiveData
     }
+
+    fun refreshPokemon(): LiveData<DataInfo>? {
+        mainRepository?.resetOffset()
+        return getPokemon()
+    }
 }
