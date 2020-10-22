@@ -37,7 +37,7 @@ class PokemonAdapter(private val context: Context, private val items: List<Pokem
         val url = String.format(context.getString(R.string.url_pokemon_image), id)
         Glide.with(context).load(url).into(holder.img)
 
-        holder.txtName.text = pokemon.name?.capitalize(Locale.getDefault())
+        holder.txtName.text = pokemon.name.capitalize(Locale.getDefault())
         holder.txtNumber.text = id.toString()
     }
 

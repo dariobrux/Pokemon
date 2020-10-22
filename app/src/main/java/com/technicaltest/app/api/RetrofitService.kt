@@ -1,4 +1,4 @@
-package com.technicaltest.app.networking
+package com.technicaltest.app.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

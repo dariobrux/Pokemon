@@ -4,9 +4,8 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.technicaltest.app.database.PokemonDatabase
 import com.technicaltest.app.models.DataInfo
-import com.technicaltest.app.models.PokemonData
-import com.technicaltest.app.networking.RetrofitService
-import com.technicaltest.app.networking.api.PokemonAPI
+import com.technicaltest.app.api.RetrofitService
+import com.technicaltest.app.api.ApiService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +24,7 @@ class MainRepository {
      */
     private var limit = 20
 
-    private val pokemonAPI: PokemonAPI = RetrofitService.createService(PokemonAPI::class.java)
+    private val apiService: ApiService = RetrofitService.createService(ApiService::class.java)
 
     fun resetOffset() {
         offset = 0
@@ -55,7 +54,7 @@ class MainRepository {
                 // If the database is empty, download the pokemon from the online API and
                 // store them in the database.
                 kotlin.runCatching {
-                    pokemonAPI.pokemon(offset, limit)
+                    apiService.pokemon(offset, limit)
                 }.onSuccess { response ->
                     dataInfo = if (response?.isSuccessful == true) {
                         response.body()
