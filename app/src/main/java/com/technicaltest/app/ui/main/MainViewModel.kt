@@ -1,34 +1,54 @@
 package com.technicaltest.app.ui.main
 
-import android.content.Context
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.technicaltest.app.models.DataInfo
+import com.technicaltest.app.other.Resource
+import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
+class MainViewModel @ViewModelInject constructor(private val mainRepository: MainRepository) : ViewModel() {
 
-    private var context: Context? = null
-    private var mainRepository: MainRepository? = null
-    private var pokemonLiveData: MutableLiveData<DataInfo>? = null
+    private val _pokemonLiveData = MutableLiveData<Resource<DataInfo>>()
 
-    fun init(context: Context) {
-        if (mainRepository != null) {
-            return
-        }
-        this.context = context
-        mainRepository = MainRepository.instance
+    val pokemonLiveData: LiveData<Resource<DataInfo>>
+        get() = _pokemonLiveData
+
+//    fun init(context: Context) {
+//        if (mainRepository != null) {
+//            return
+//        }
+//        this.context = context
+//        mainRepository = MainRepository.instance
+//    }
+
+//    fun getPokemon(): LiveData<DataInfo>? {
+//        context?.let {
+//            pokemonLiveData = mainRepository?.getPokemon(it)
+//        }
+//        return pokemonLiveData
+//    }
+
+    init {
+        getPokemon()
     }
 
-    fun getPokemon(): LiveData<DataInfo>? {
-        context?.let {
-            pokemonLiveData = mainRepository?.getPokemon(it)
+    private fun getPokemon() = viewModelScope.launch {
+        _pokemonLiveData.postValue(Resource.loading(null))
+        mainRepository.getPokemon()?.let {
+            if (it.isSuccessful) {
+                _pokemonLiveData.postValue(Resource.success(it.body()))
+            } else {
+                _pokemonLiveData.postValue(Resource.error(it.errorBody().toString(), null))
+            }
         }
-        return pokemonLiveData
     }
 
-    fun refreshPokemon(): LiveData<DataInfo>? {
-        mainRepository?.resetOffset()
-        return getPokemon()
+
+    fun refreshPokemon() {
+        mainRepository.resetOffset()
+        getPokemon()
     }
 }
