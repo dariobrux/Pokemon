@@ -59,10 +59,10 @@ class MainRepository @Inject constructor(private val apiHelper: ApiHelper, priva
             val localPokemonList = pokemonDao.getPokemonList(offset, limit)
 
             // If it is not empty, read and pass the data retrieved from database.
-            if (!localPokemonList.value.isNullOrEmpty()) {
+            if (!localPokemonList.isNullOrEmpty()) {
                 Timber.d("Read the pokemon list from the database.")
                 dataInfo = DataInfo().apply {
-                    pokemonList = localPokemonList.value
+                    pokemonList = localPokemonList
                 }
             } else {
 

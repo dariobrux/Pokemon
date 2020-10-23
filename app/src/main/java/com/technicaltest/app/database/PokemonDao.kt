@@ -25,7 +25,7 @@ interface PokemonDao {
      * @return the list with all pokemon.
      */
     @Query("Select * from pokemon limit :limit offset :offset")
-    fun getPokemonList(offset: Int, limit: Int): LiveData<List<Pokemon>>
+    fun getPokemonList(offset: Int, limit: Int): List<Pokemon>
 
     /**
      * Add a list of pokemon in the database.
