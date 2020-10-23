@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -15,6 +16,7 @@ import com.technicaltest.app.R
 import com.technicaltest.app.models.Pokemon
 import com.technicaltest.app.ui.adapters.PokemonAdapter
 import com.technicaltest.app.ui.utils.VerticalSpaceItemDecoration
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_fragment.*
 import timber.log.Timber
 
@@ -26,10 +28,16 @@ import timber.log.Timber
  * the list of all pokemon. It limits the items to display
  * each time. So, after having scrolled the list, an HTTP request must be
  * done to retrieve another group of pokemon.
+ *
+ * I declare this class with AndroidEntryPoint annotation, to tell the activity that
+ * we will be injecting dependency here. Without this, the DI won't work.
  */
+
+@AndroidEntryPoint
 class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.OnPokemonSelectedListener {
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
+
     private lateinit var adapter: PokemonAdapter
 
     private val pokemonList = mutableListOf<Pokemon>()
@@ -45,16 +53,14 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.O
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        viewModel.init(requireContext())
         getPokemonList()
     }
 
     private fun getPokemonList() {
-        viewModel.getPokemon()?.observe(this.viewLifecycleOwner) { dataInfo ->
-            Timber.d("Observer the dataInfo object. It contains ${dataInfo?.pokemonList?.size ?: 0} pokemon")
-            pokemonList.addAll(dataInfo?.pokemonList ?: emptyList())
+        viewModel.getPokemon()?.observe(this.viewLifecycleOwner) {
+            Timber.d("Observer the dataInfo object. It contains ${it.data?.pokemonList?.size ?: 0} pokemon")
+            pokemonList.addAll(it.data?.pokemonList ?: emptyList())
             adapter.notifyDataSetChanged()
 
             // Tells the recyclerView that the items are loaded,
@@ -64,11 +70,11 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.O
     }
 
     private fun refreshPokemonList() {
-        viewModel.refreshPokemon()?.observe(this.viewLifecycleOwner) { dataInfo ->
-            Timber.d("Refresh the pokemon list. Displayed ${dataInfo?.pokemonList ?: 0} pokemon.")
+        viewModel.refreshPokemon()?.observe(this.viewLifecycleOwner) {
+            Timber.d("Refresh the pokemon list. Displayed ${it.data?.pokemonList ?: 0} pokemon.")
 
             pokemonList.clear()
-            pokemonList.addAll(dataInfo?.pokemonList ?: emptyList())
+            pokemonList.addAll(it.data?.pokemonList ?: emptyList())
             adapter.notifyDataSetChanged()
 
             // Tells the recyclerView that the items are refreshed.

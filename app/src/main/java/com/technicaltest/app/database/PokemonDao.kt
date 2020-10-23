@@ -1,9 +1,11 @@
 package com.technicaltest.app.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.technicaltest.app.models.DataInfo
 import com.technicaltest.app.models.Pokemon
 
 /**
@@ -23,11 +25,11 @@ interface PokemonDao {
      * @return the list with all pokemon.
      */
     @Query("Select * from pokemon limit :limit offset :offset")
-    fun getPokemonList(offset: Int, limit: Int): List<Pokemon>
+    fun getPokemonList(offset: Int, limit: Int): LiveData<List<Pokemon>>
 
     /**
-     * Add a pokemon in the database.
-     * @param pokemon: the [Pokemon] object to insert.
+     * Add a list of pokemon in the database.
+     * @param pokemonList: the [Pokemon] list to insert.
      * Use the replacing strategy to override each existing item.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
