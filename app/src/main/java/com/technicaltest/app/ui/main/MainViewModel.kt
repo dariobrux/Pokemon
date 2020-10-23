@@ -10,10 +10,11 @@ import com.technicaltest.app.models.Pokemon
 import com.technicaltest.app.other.Resource
 import kotlinx.coroutines.launch
 
-class MainViewModel @ViewModelInject constructor(private val mainRepository: MainRepository) : ViewModel() {
+class MainViewModel @ViewModelInject constructor(val mainRepository: MainRepository) : ViewModel() {
 
-    val pokemonList: LiveData<Resource<DataInfo>> = mainRepository.getPokemon()
+//    val pokemonList: LiveData<Resource<DataInfo>> = mainRepository.getPokemon()
 
+    private var pokemonLiveData: LiveData<Resource<DataInfo>>? = null
 //    private val _pokemonLiveData = MutableLiveData<Resource<DataInfo>>()
 
 //    val pokemonLiveData: LiveData<Resource<DataInfo>>
@@ -27,12 +28,10 @@ class MainViewModel @ViewModelInject constructor(private val mainRepository: Mai
 //        mainRepository = MainRepository.instance
 //    }
 
-//    fun getPokemon(): LiveData<DataInfo>? {
-//        context?.let {
-//            pokemonLiveData = mainRepository?.getPokemon(it)
-//        }
-//        return pokemonLiveData
-//    }
+    fun getPokemon(): LiveData<Resource<DataInfo>>? {
+        pokemonLiveData = mainRepository.getPokemon()
+        return pokemonLiveData
+    }
 
 //    init {
 //        getPokemon()
@@ -50,8 +49,8 @@ class MainViewModel @ViewModelInject constructor(private val mainRepository: Mai
 //    }
 
 
-    fun refreshPokemon() {
-//        mainRepository.resetOffset()
-//        getPokemon()
+    fun refreshPokemon(): LiveData<Resource<DataInfo>>? {
+        mainRepository.resetOffset()
+        return getPokemon()
     }
 }

@@ -58,7 +58,7 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.O
     }
 
     private fun getPokemonList() {
-        viewModel.pokemonList.observe(this.viewLifecycleOwner) {
+        viewModel.getPokemon()?.observe(this.viewLifecycleOwner) {
             Timber.d("Observer the dataInfo object. It contains ${it.data?.pokemonList?.size ?: 0} pokemon")
             pokemonList.addAll(it.data?.pokemonList ?: emptyList())
             adapter.notifyDataSetChanged()
@@ -70,16 +70,16 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.O
     }
 
     private fun refreshPokemonList() {
-//        viewModel.refreshPokemon()?.observe(this.viewLifecycleOwner) { dataInfo ->
-//            Timber.d("Refresh the pokemon list. Displayed ${dataInfo?.pokemonList ?: 0} pokemon.")
-//
-//            pokemonList.clear()
-//            pokemonList.addAll(dataInfo?.pokemonList ?: emptyList())
-//            adapter.notifyDataSetChanged()
-//
-//            // Tells the recyclerView that the items are refreshed.
-//            recycler?.refreshComplete()
-//        }
+        viewModel.refreshPokemon()?.observe(this.viewLifecycleOwner) {
+            Timber.d("Refresh the pokemon list. Displayed ${it.data?.pokemonList ?: 0} pokemon.")
+
+            pokemonList.clear()
+            pokemonList.addAll(it.data?.pokemonList ?: emptyList())
+            adapter.notifyDataSetChanged()
+
+            // Tells the recyclerView that the items are refreshed.
+            recycler?.refreshComplete()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
