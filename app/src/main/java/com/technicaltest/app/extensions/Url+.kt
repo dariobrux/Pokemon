@@ -4,6 +4,13 @@ package com.technicaltest.app.extensions
  *
  * Created by Dario Bruzzese on 20/10/2020.
  *
+ * Use this class to put all the extension methods
+ * belonging to a
+ */
+
+/**
+ * Split an url by "/" to get the last index. It contains the id.
+ * @return the id
  */
 fun String.getIdFromUrl() : Int {
     val splitUrl = this.split("/").toMutableList()

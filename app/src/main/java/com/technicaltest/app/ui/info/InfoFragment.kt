@@ -9,6 +9,12 @@ import android.view.ViewGroup
 import com.technicaltest.app.R
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ *
+ * Created by Dario Bruzzese on 22/10/2020.
+ *
+ */
+
 @AndroidEntryPoint
 class InfoFragment : Fragment() {
 

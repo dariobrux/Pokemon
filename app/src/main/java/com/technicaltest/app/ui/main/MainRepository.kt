@@ -1,13 +1,11 @@
 package com.technicaltest.app.ui.main
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.technicaltest.app.api.ApiHelperImpl
+import com.technicaltest.app.api.ApiHelper
 import com.technicaltest.app.database.PokemonDao
 import com.technicaltest.app.models.DataInfo
 import com.technicaltest.app.other.Resource
-import com.technicaltest.app.other.performGetOperation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,7 +13,15 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainRepository @Inject constructor(private val apiHelper: ApiHelperImpl, private val pokemonDao: PokemonDao) {
+/**
+ *
+ * Created by Dario Bruzzese on 22/10/2020.
+ *
+ * This class is the repository that handles the communication
+ * between the restful api and the database.
+ *
+ */
+class MainRepository @Inject constructor(private val apiHelper: ApiHelper, private val pokemonDao: PokemonDao) {
 
     /**
      * Increment it to display the next set of items.
@@ -27,20 +33,21 @@ class MainRepository @Inject constructor(private val apiHelper: ApiHelperImpl, p
      */
     private var limit = 20
 
-//    private val apiService: ApiService = RetrofitService.createService(ApiService::class.java)
-
+    /**
+     * Reset the offset to start from the first pokemon.
+     */
     fun resetOffset() {
         offset = 0
     }
 
-//    fun getPokemon() = performGetOperation(
-//        databaseQuery = { pokemonDao.getPokemonList(offset, limit) },
-//        networkCall = { apiHelper.pokemon(offset, limit) },
-//        saveCallResult = { pokemonDao.insertPokemonList(it) }
-//    )
-
-//    suspend fun getPokemon() = apiHelper.pokemon(offset, limit)
-
+    /**
+     * Get the list of the pokemon from a restful api or from the database.
+     * Read first the local pokemon list from db. If this list is not empty,
+     * notify that some pokemon are available.
+     * If the local list is empty, download the pokemon from the api. Then,
+     * store this list in the database.
+     * @return the [DataInfo] object mapped into a [Resource], inside a [LiveData].
+     */
     fun getPokemon(): LiveData<Resource<DataInfo>> {
         val mutableLiveData: MutableLiveData<Resource<DataInfo>> = MutableLiveData()
 
@@ -92,15 +99,4 @@ class MainRepository @Inject constructor(private val apiHelper: ApiHelperImpl, p
 
         return mutableLiveData
     }
-//
-//    companion object {
-//        private var mainRepository: MainRepository? = null
-//        val instance: MainRepository?
-//            get() {
-//                if (mainRepository == null) {
-//                    mainRepository = MainRepository()
-//                }
-//                return mainRepository
-//            }
-//    }
 }

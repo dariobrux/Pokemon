@@ -14,7 +14,13 @@ import com.technicaltest.app.extensions.getIdFromUrl
 import com.technicaltest.app.models.Pokemon
 import java.util.*
 
-
+/**
+ *
+ * Created by Dario Bruzzese on 20/10/2020.
+ *
+ * This is the adapter applied to the RecyclerView in the MainFragment.
+ *
+ */
 class PokemonAdapter(private val context: Context, private val items: List<Pokemon>, private val listener: OnPokemonSelectedListener?) : RecyclerView.Adapter<PokemonAdapter.PostViewHolder>() {
 
     interface OnPokemonSelectedListener {

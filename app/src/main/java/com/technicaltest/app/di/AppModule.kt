@@ -2,7 +2,7 @@ package com.technicaltest.app.di
 
 import android.content.Context
 import com.technicaltest.app.BuildConfig
-import com.technicaltest.app.api.ApiHelperImpl
+import com.technicaltest.app.api.ApiHelper
 import com.technicaltest.app.api.ApiService
 import com.technicaltest.app.database.PokemonDao
 import com.technicaltest.app.database.PokemonDatabase
@@ -19,6 +19,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+/**
+ *
+ * Created by Dario Bruzzese on 22/10/2020.
+ *
+ * This singleton object is a bucket from where we will get all the dependencies from.
+ *
+ */
 @Module
 @InstallIn(ApplicationComponent::class)
 object AppModule {
@@ -54,7 +61,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideApiHelper(apiService: ApiService) = ApiHelperImpl(apiService)
+    fun provideApiHelper(apiService: ApiService) = ApiHelper(apiService)
 
     @Singleton
     @Provides
@@ -66,5 +73,5 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRepository(apiHelper: ApiHelperImpl, dao: PokemonDao) = MainRepository(apiHelper, dao)
+    fun provideRepository(apiHelper: ApiHelper, dao: PokemonDao) = MainRepository(apiHelper, dao)
 }
