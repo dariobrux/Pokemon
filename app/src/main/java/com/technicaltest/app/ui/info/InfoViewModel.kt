@@ -10,7 +10,10 @@ import com.technicaltest.app.ui.main.MainRepository
  * Created by Dario Bruzzese on 22/10/2020.
  *
  */
-class InfoViewModel @ViewModelInject constructor(private val infoRepository: InfoRepository): ViewModel() {
+class InfoViewModel @ViewModelInject constructor(private val infoRepository: InfoRepository) : ViewModel() {
+
 
     fun getPokemonData(name: String, url: String) = infoRepository.getPokemonData(name, url)
+
+    fun getPictureUrl(pokemonData : PokemonData) = pokemonData.sprites?.otherSprites?.officialArtwork?.frontDefault ?: ""
 }

@@ -52,7 +52,7 @@ class MainAdapter(private val context: Context, private val items: List<Pokemon>
         Glide.with(context).asBitmap().load(url).listener(object : RequestListener<Bitmap> {
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
                 Timber.e("Image loading failed")
-                return false
+                return true
             }
 
             override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
