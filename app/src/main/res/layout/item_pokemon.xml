@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="@dimen/regular_height"
     app:cardCornerRadius="@dimen/regular_radius">
@@ -28,8 +29,8 @@
             android:adjustViewBounds="true"
             android:contentDescription="@null"
             android:scaleType="centerInside"
-            app:layout_constraintTop_toBottomOf="@id/txtNumber"
-            app:layout_constraintBottom_toTopOf="@+id/txtName" />
+            app:layout_constraintBottom_toTopOf="@+id/txtName"
+            app:layout_constraintTop_toBottomOf="@id/txtNumber" />
 
         <TextView
             android:id="@+id/txtName"

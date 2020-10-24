@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.NonNull
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.technicaltest.app.R
@@ -28,12 +29,7 @@ class PokemonAdapter(private val context: Context, private val items: List<Pokem
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.item_pokemon, parent, false)
-        val holder =  PostViewHolder(view)
-        view.setOnClickListener {
-            listener?.onPokemonSelected(items[holder.adapterPosition])
-        }
-        return holder
+        return PostViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_pokemon, parent, false))
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
@@ -45,6 +41,10 @@ class PokemonAdapter(private val context: Context, private val items: List<Pokem
 
         holder.txtName.text = pokemon.name.capitalize(Locale.getDefault())
         holder.txtNumber.text = id.toString()
+
+        holder.card.setOnClickListener {
+            listener?.onPokemonSelected(items[holder.adapterPosition])
+        }
     }
 
     override fun getItemCount(): Int {
@@ -52,6 +52,7 @@ class PokemonAdapter(private val context: Context, private val items: List<Pokem
     }
 
     class PostViewHolder(@NonNull itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var card: CardView = itemView.findViewById(R.id.card)
         var img: ImageView = itemView.findViewById(R.id.img)
         var txtName: TextView = itemView.findViewById(R.id.txtName)
         var txtNumber: TextView = itemView.findViewById(R.id.txtNumber)
