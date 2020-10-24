@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 import com.technicaltest.app.R
@@ -82,7 +83,8 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recycler?.let {
-            it.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
+            it.layoutManager = LinearLayoutManager(requireContext())
+//            it.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
             it.addItemDecoration(VerticalSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_space)))
             it.adapter = adapter
             it.setLoadingListener(this)

@@ -18,9 +18,6 @@ class VerticalSpaceItemDecoration(private val space: Int) : ItemDecoration() {
             if (position < it.itemCount - 1) {
                 outRect.bottom = space
             }
-            if (position % 2 == 1) {
-                outRect.right = space
-            }
         }
     }
 }
