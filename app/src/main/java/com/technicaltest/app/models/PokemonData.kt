@@ -12,13 +12,16 @@ import com.google.gson.annotations.SerializedName
  */
 @Entity(tableName = "pokemonData")
 class PokemonData {
-
     @PrimaryKey
     @NonNull
     var id: Int = 0
 
+    var name: String? = ""
+
     @SerializedName("base_experience")
     var baseExperience = 0
 
-    var name: String? = ""
+    var height = 0
+
+    var weight = 0
 }

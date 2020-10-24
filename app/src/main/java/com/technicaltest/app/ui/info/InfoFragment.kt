@@ -14,6 +14,7 @@ import com.technicaltest.app.models.Pokemon
 import com.technicaltest.app.ui.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.info_fragment.*
+import java.util.*
 
 /**
  *
@@ -38,15 +39,17 @@ class InfoFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val id = pokemon.url?.getIdFromUrl() ?: -1
-        val url = String.format(requireContext().getString(R.string.url_pokemon_image), id)
-        Glide.with(requireContext()).load(url).into(img)
 
-        txtName?.text = pokemon.name
+        txtName?.text = pokemon.name.capitalize(Locale.getDefault())
 
         viewModel.getPokemonData(pokemon.name, pokemon.url ?: "").observe(this.viewLifecycleOwner) {
             val pokemonData = it.data ?: return@observe
-            txtExperience?.text = pokemonData.baseExperience.toString()
+            txtExperience?.text = getString(R.string.base_experience, pokemonData.baseExperience)
+            txtHeight?.text = getString(R.string.height, pokemonData.height)
+            txtWeight?.text = getString(R.string.weight, pokemonData.weight)
+
+            val url = String.format(requireContext().getString(R.string.url_pokemon_image), pokemonData.id)
+            Glide.with(requireContext()).load(url).into(img)
         }
     }
 
