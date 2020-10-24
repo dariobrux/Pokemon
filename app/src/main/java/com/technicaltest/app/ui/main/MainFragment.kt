@@ -7,14 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 import com.technicaltest.app.R
 import com.technicaltest.app.models.Pokemon
-import com.technicaltest.app.ui.adapters.PokemonAdapter
 import com.technicaltest.app.ui.utils.VerticalSpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_fragment.*
@@ -34,17 +32,17 @@ import timber.log.Timber
  */
 
 @AndroidEntryPoint
-class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.OnPokemonSelectedListener {
+class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPokemonSelectedListener {
 
     private val viewModel: MainViewModel by viewModels()
 
-    private lateinit var adapter: PokemonAdapter
+    private lateinit var adapter: MainAdapter
 
     private val pokemonList = mutableListOf<Pokemon>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        adapter = PokemonAdapter(requireContext(), pokemonList, this)
+        adapter = MainAdapter(requireContext(), pokemonList, this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

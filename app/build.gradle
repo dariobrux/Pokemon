@@ -40,6 +40,9 @@ dependencies {
     // Material Design
     implementation 'com.google.android.material:material:1.2.1'
 
+    // Palette
+    implementation 'androidx.palette:palette-ktx:1.0.0'
+
     // Architectural Component & Lifecycle Scopes
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
