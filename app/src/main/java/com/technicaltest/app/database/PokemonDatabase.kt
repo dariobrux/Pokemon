@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.technicaltest.app.models.Pokemon
 import com.technicaltest.app.models.PokemonData
+import com.technicaltest.app.models.sprites.Sprite
 
 /**
  *
@@ -15,7 +16,16 @@ import com.technicaltest.app.models.PokemonData
  *
  */
 
-@Database(entities = [Pokemon::class, PokemonData::class], exportSchema = false, version = 1)
+@Database(
+    exportSchema = false, version = 1, entities = [
+        Pokemon::class,
+        PokemonData::class,
+        Sprite::class
+//        OtherSprite::class,
+//        DreamWorld::class,
+//        OfficialArtwork::class
+    ]
+)
 abstract class PokemonDatabase : RoomDatabase() {
 
     companion object {

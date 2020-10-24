@@ -3,7 +3,10 @@ package com.technicaltest.app.models
 import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
+import com.technicaltest.app.models.sprites.Sprite
+import com.technicaltest.app.models.sprites.typeConverters.SpriteConverter
 
 /**
  *
@@ -24,4 +27,7 @@ class PokemonData {
     var height = 0
 
     var weight = 0
+
+    @TypeConverters(SpriteConverter::class)
+    var sprites: Sprite? = null
 }

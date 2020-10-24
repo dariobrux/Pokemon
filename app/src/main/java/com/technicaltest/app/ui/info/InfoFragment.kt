@@ -48,8 +48,9 @@ class InfoFragment : Fragment() {
             txtHeight?.text = getString(R.string.height, pokemonData.height)
             txtWeight?.text = getString(R.string.weight, pokemonData.weight)
 
-            val url = String.format(requireContext().getString(R.string.url_pokemon_image), pokemonData.id)
-            Glide.with(requireContext()).load(url).into(img)
+            pokemonData.sprites?.otherSprites?.officialArtwork?.frontDefault?.let {url ->
+                Glide.with(requireContext()).load(url).into(img)
+            }
         }
     }
 
