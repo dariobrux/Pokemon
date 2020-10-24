@@ -2,6 +2,7 @@ package com.technicaltest.app.ui.main
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.technicaltest.app.models.DataInfo
 import com.technicaltest.app.other.Resource
@@ -13,14 +14,13 @@ import com.technicaltest.app.other.Resource
  */
 class MainViewModel @ViewModelInject constructor(private val mainRepository: MainRepository) : ViewModel() {
 
-    private var pokemonLiveData: LiveData<Resource<DataInfo>>? = null
+    val isSortByName : MutableLiveData<Boolean> = MutableLiveData(false)
 
     /**
      * @return the pokemon list.
      */
     fun getPokemon(): LiveData<Resource<DataInfo>>? {
-        pokemonLiveData = mainRepository.getPokemon()
-        return pokemonLiveData
+        return mainRepository.getPokemon()
     }
 
     /**
@@ -29,5 +29,9 @@ class MainViewModel @ViewModelInject constructor(private val mainRepository: Mai
     fun refreshPokemon(): LiveData<Resource<DataInfo>>? {
         mainRepository.resetOffset()
         return getPokemon()
+    }
+
+    fun switchSort() {
+        isSortByName.value = (isSortByName.value)?.not()
     }
 }
