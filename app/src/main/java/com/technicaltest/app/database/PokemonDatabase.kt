@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.technicaltest.app.models.Pokemon
+import com.technicaltest.app.models.PokemonData
 
 /**
  *
@@ -14,7 +15,7 @@ import com.technicaltest.app.models.Pokemon
  *
  */
 
-@Database(entities = [Pokemon::class], exportSchema = false, version = 1)
+@Database(entities = [Pokemon::class, PokemonData::class], exportSchema = false, version = 1)
 abstract class PokemonDatabase : RoomDatabase() {
 
     companion object {

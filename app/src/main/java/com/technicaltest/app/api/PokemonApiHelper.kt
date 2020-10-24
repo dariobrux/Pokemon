@@ -1,19 +1,20 @@
 package com.technicaltest.app.api
 
 import com.technicaltest.app.models.DataInfo
+import com.technicaltest.app.other.Resource
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Query
+import javax.inject.Inject
 
 /**
  *
  * Created by Dario Bruzzese on 22/10/2020.
  *
- * Interface for Retrofit that contains the declaration of the API to invoke.
+ * This class get the results from the api service and map the result object
+ * to an useful object with the status.
  *
  */
 
-interface ApiService {
+class PokemonApiHelper @Inject constructor(private val pokemonService: PokemonService) : ApiHelper() {
 
     /**
      * Get the [DataInfo] with the pokemon list.
@@ -21,9 +22,5 @@ interface ApiService {
      * @param limit maximum number of items to retrieve.
      * @return the [DataInfo] mapped into a [Response] object.
      */
-    @GET("api/v2/pokemon")
-    suspend fun pokemon(@Query("offset") offset: Int, @Query("limit") limit: Int): Response<DataInfo>
-
-//    @GET
-//    suspend fun pokemonData(@Url url: String) : Response<PokemonData>
+    suspend fun getPokemon(offset: Int, limit: Int) = getResult { pokemonService.pokemon(offset, limit) }
 }

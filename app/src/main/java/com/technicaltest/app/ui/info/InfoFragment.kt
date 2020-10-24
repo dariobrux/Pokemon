@@ -43,6 +43,11 @@ class InfoFragment : Fragment() {
         Glide.with(requireContext()).load(url).into(img)
 
         txtName?.text = pokemon.name
+
+        viewModel.getPokemonData(pokemon.name, pokemon.url ?: "").observe(this.viewLifecycleOwner) {
+            val pokemonData = it.data ?: return@observe
+            txtExperience?.text = pokemonData.baseExperience.toString()
+        }
     }
 
 }
