@@ -37,6 +37,10 @@ android {
 
 dependencies {
 
+    // DataStore
+    // https://medium.com/swlh/preferences-datastore-in-a-kotlin-way-4c4c41a906e1
+    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha02"
+
     // Material Design
     implementation 'com.google.android.material:material:1.2.1'
 
