@@ -32,6 +32,8 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var dataStore: DataStore<Preferences>
 
+    var switchSort : MutableLiveData<Boolean?> = MutableLiveData<Boolean?>(null)
+
     var isThemeChanged = false
 
     private var isNightMode = false
@@ -44,15 +46,21 @@ class MainActivity : AppCompatActivity() {
         readNightMode()
 
         // Add a button on the toolbar
-        toolbar?.inflateMenu(R.menu.menu)
-        toolbar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.action_menu -> {
-                    // Switch theme
-                    switchTheme()
+        toolbar?.let {
+            it.inflateMenu(R.menu.menu)
+            it.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.action_sort -> {
+                        // Sort by name or number
+                        switchSort.value = switchSort.value?.not() ?: true
+                    }
+                    R.id.action_theme -> {
+                        // Switch theme
+                        switchTheme()
+                    }
                 }
+                false
             }
-            false
         }
     }
 

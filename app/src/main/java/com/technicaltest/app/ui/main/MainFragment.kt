@@ -17,6 +17,7 @@ import com.technicaltest.app.extensions.getIdFromUrl
 import com.technicaltest.app.models.Pokemon
 import com.technicaltest.app.ui.utils.VerticalSpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.main_fragment.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -71,12 +72,13 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
             it.setLoadingListener(this)
         }
 
-        fab?.setOnClickListener {
+        (activity as MainActivity).switchSort.observe(this.viewLifecycleOwner) {
+            it ?: return@observe
             viewModel.switchSort()
         }
 
         viewModel.isSortByName.observe(this.viewLifecycleOwner) { isSortByName ->
-            fab?.text =if (isSortByName) {
+            (activity as MainActivity).toolbar?.menu?.getItem(0)?.title = if (isSortByName) {
                 sortByName()
                 getString(R.string.num_sorting)
             } else {
