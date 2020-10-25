@@ -32,8 +32,14 @@ import java.util.*
 @AndroidEntryPoint
 class InfoFragment : Fragment() {
 
+    /**
+     * The pokemon object
+     */
     private lateinit var pokemon: Pokemon
 
+    /**
+     * The ViewModel
+     */
     private val viewModel: InfoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +55,15 @@ class InfoFragment : Fragment() {
 
         txtName?.text = pokemon.name.capitalize(Locale.getDefault())
 
+        // Get the info of the pokemob.
+        getPokemonData()
+    }
+
+    /**
+     * Observe the ViewModel LiveData property to get the info of the
+     * pokemon and refresh the layout.
+     */
+    private fun getPokemonData() {
         viewModel.getPokemonData(pokemon.name, pokemon.url ?: "").observe(this.viewLifecycleOwner) {
             val pokemonData = it.data ?: return@observe
             txtExperience?.text = getString(R.string.base_experience, pokemonData.baseExperience)
@@ -61,6 +76,8 @@ class InfoFragment : Fragment() {
                     return true
                 }
 
+                // When the bitmap is loaded, I get the dominant color of the image
+                // and use it as background color.
                 override fun onResourceReady(bitmap: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                     bitmap ?: return true
                     bitmap.getDominantColor(ContextCompat.getColor(requireContext(), R.color.white)) { color ->
@@ -71,7 +88,6 @@ class InfoFragment : Fragment() {
                 }
 
             }).into(img)
-
         }
     }
 }

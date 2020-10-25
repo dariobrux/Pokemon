@@ -21,9 +21,6 @@ import com.technicaltest.app.models.sprites.Sprite
         Pokemon::class,
         PokemonData::class,
         Sprite::class
-//        OtherSprite::class,
-//        DreamWorld::class,
-//        OfficialArtwork::class
     ]
 )
 abstract class PokemonDatabase : RoomDatabase() {

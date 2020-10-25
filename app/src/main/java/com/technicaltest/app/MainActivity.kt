@@ -28,6 +28,9 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var dataStore: DataStore<Preferences>
 
+    /**
+     * Current theme
+     */
     private var theme = Theme.UNDEFINED
 
     enum class Theme {
@@ -35,6 +38,11 @@ class MainActivity : AppCompatActivity() {
         NIGHT_MODE_YES,
         UNDEFINED;
 
+        /**
+         * Invert theme.
+         * Night Mode -> Day Mode
+         * Day Mode | Undefined -> Night Mode
+         */
         fun inverse() : Theme {
             return when(this) {
                 NIGHT_MODE_YES -> {
@@ -53,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
+        // Check what is the current theme
         when ((resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)) {
             Configuration.UI_MODE_NIGHT_NO -> {
                 Timber.tag(TAG).d("Night mode is not active, we're in day time")
@@ -82,28 +91,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-//    /**
-//     * Switch theme. If current theme is night, switch to day.
-//     * If current theme is day, switch to night,
-//     */
-//    private fun switchTheme() {
-//        isNightMode = if (isNightMode) {
-//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-//            false
-//        } else {
-//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-//            true
-//        }
-//
-//        lifecycleScope.launch {
-//            dataStore.storeValue(PreferenceKeys.THEME_NIGHT, isNightMode)
-//        }
-//    }
-//
-//    private fun performThemeChanged() {
-//        isThemeChanged = true
-//    }
 
     companion object {
         private const val TAG = "MainActivity"

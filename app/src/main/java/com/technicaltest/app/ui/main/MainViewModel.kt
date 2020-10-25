@@ -15,7 +15,6 @@ import com.technicaltest.app.other.Resource
  */
 class MainViewModel @ViewModelInject constructor(private val mainRepository: MainRepository) : ViewModel() {
 
-    //    val isSortByName : MutableLiveData<Boolean> = MutableLiveData(false)
     val pokemonList = mutableListOf<Pokemon>()
 
     /**
@@ -32,8 +31,4 @@ class MainViewModel @ViewModelInject constructor(private val mainRepository: Mai
         mainRepository.resetOffset()
         return getPokemon()
     }
-
-//    fun switchSort() {
-//        isSortByName.value = (isSortByName.value)?.not()
-//    }
 }

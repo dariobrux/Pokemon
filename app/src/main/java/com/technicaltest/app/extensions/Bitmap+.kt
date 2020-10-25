@@ -11,10 +11,9 @@ import androidx.palette.graphics.Palette
  * if the call fails.
  */
 fun Bitmap.getDominantColor(defaultColor: Int, onColorDetected: ((Int) -> Unit)?) {
-    var result = defaultColor
     Palette.Builder(this).generate {
         it ?: return@generate
-        result = it.getDominantColor(defaultColor)
+        val result = it.getDominantColor(defaultColor)
         onColorDetected?.invoke(result)
     }
 }

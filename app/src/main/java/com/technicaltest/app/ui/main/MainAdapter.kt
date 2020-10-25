@@ -58,6 +58,8 @@ class MainAdapter(private val context: Context, private val items: List<Pokemon>
                 return true
             }
 
+            // When the bitmap is loaded, I get the dominant color of the image
+            // and use it as background color.
             override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                 resource?: return true
                 resource.getDominantColor(ContextCompat.getColor(context, R.color.white)) { color ->
