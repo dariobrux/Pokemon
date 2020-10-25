@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.datastore.DataStore
 import androidx.datastore.preferences.Preferences
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.technicaltest.app.extensions.readValue
 import com.technicaltest.app.extensions.storeValue
@@ -30,6 +31,8 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var dataStore: DataStore<Preferences>
+
+    var isThemeChanged = false
 
     private var isNightMode = false
 
@@ -79,6 +82,7 @@ class MainActivity : AppCompatActivity() {
     private fun readNightMode() {
         lifecycleScope.launch {
             dataStore.readValue(PreferenceKeys.THEME_NIGHT) {
+                performThemeChanged()
                 isNightMode = if (this) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                     true
@@ -88,5 +92,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun performThemeChanged() {
+        isThemeChanged = true
     }
 }

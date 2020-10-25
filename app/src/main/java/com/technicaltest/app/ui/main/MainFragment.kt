@@ -11,6 +11,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jcodecraeer.xrecyclerview.XRecyclerView
+import com.technicaltest.app.MainActivity
 import com.technicaltest.app.R
 import com.technicaltest.app.extensions.getIdFromUrl
 import com.technicaltest.app.models.Pokemon
@@ -18,6 +19,7 @@ import com.technicaltest.app.ui.utils.VerticalSpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_fragment.*
 import timber.log.Timber
+import javax.inject.Inject
 
 
 /**
@@ -53,7 +55,12 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        getPokemonList()
+        if (!(activity as MainActivity).isThemeChanged) {
+            getPokemonList()
+        } else {
+            refreshPokemonList()
+        }
+        (activity as MainActivity).isThemeChanged = false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -112,7 +119,7 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
         }
     }
 
-    private fun refreshPokemonList() {
+    fun refreshPokemonList() {
         viewModel.refreshPokemon()?.observe(this.viewLifecycleOwner) {
             Timber.d("Refresh the pokemon list. Displayed ${it.data?.pokemonList ?: 0} pokemon.")
 
