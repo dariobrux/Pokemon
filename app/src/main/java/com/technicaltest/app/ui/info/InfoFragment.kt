@@ -63,10 +63,9 @@ class InfoFragment : Fragment() {
 
                 override fun onResourceReady(bitmap: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                     bitmap ?: return true
-                    bitmap.getDominantColor(ContextCompat.getColor(requireContext(), R.color.white)).let { color ->
+                    bitmap.getDominantColor(ContextCompat.getColor(requireContext(), R.color.white)) { color ->
                         card?.setCardBackgroundColor(color)
-                        containerRoot?.setBackgroundColor(color.changeAlpha(80))
-                        return@let
+                        containerRoot?.setBackgroundColor(color.changeAlpha(190))
                     }
                     return false
                 }

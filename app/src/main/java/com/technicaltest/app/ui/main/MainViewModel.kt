@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.technicaltest.app.models.DataInfo
+import com.technicaltest.app.models.Pokemon
 import com.technicaltest.app.other.Resource
 
 /**
@@ -14,7 +15,8 @@ import com.technicaltest.app.other.Resource
  */
 class MainViewModel @ViewModelInject constructor(private val mainRepository: MainRepository) : ViewModel() {
 
-    val isSortByName : MutableLiveData<Boolean> = MutableLiveData(false)
+    //    val isSortByName : MutableLiveData<Boolean> = MutableLiveData(false)
+    val pokemonList = mutableListOf<Pokemon>()
 
     /**
      * @return the pokemon list.
@@ -31,7 +33,7 @@ class MainViewModel @ViewModelInject constructor(private val mainRepository: Mai
         return getPokemon()
     }
 
-    fun switchSort() {
-        isSortByName.value = (isSortByName.value)?.not()
-    }
+//    fun switchSort() {
+//        isSortByName.value = (isSortByName.value)?.not()
+//    }
 }
