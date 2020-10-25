@@ -1,6 +1,9 @@
 package com.technicaltest.app.di
 
 import android.content.Context
+import androidx.datastore.DataStore
+import androidx.datastore.preferences.Preferences
+import androidx.datastore.preferences.createDataStore
 import com.technicaltest.app.BuildConfig
 import com.technicaltest.app.api.PokemonApiHelper
 import com.technicaltest.app.api.PokemonDataApiHelper
@@ -32,6 +35,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(ApplicationComponent::class)
 object AppModule {
+
+    @Singleton
+    @Provides
+    fun provideLocalStorage(@ApplicationContext context: Context) = context.createDataStore(name = "sample")
 
     @Provides
     fun provideBaseUrl() = Constants.BASE_URL
