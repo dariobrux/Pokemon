@@ -1,29 +1,18 @@
 package com.technicaltest.app
 
 import android.os.Bundle
-import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.Toolbar
 import androidx.datastore.DataStore
-import androidx.datastore.preferences.*
+import androidx.datastore.preferences.Preferences
 import androidx.lifecycle.lifecycleScope
-import com.technicaltest.app.extensions.getFromLocalStorage
 import com.technicaltest.app.extensions.readValue
 import com.technicaltest.app.extensions.storeValue
 import com.technicaltest.app.preferences.PreferenceKeys
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_activity.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.io.IOException
-import java.util.Locale.filter
 import javax.inject.Inject
-
 
 /**
  *
@@ -49,6 +38,45 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
 
         // Read theme value from the DataStore
+        readNightMode()
+
+        // Add a button on the toolbar
+        toolbar?.inflateMenu(R.menu.menu)
+        toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_menu -> {
+                    // Switch theme
+                    switchTheme()
+                }
+            }
+            false
+        }
+    }
+
+    /**
+     * Switch theme. If current theme is night, switch to day.
+     * If current theme is day, switch to night,
+     */
+    private fun switchTheme() {
+        isNightMode = if (isNightMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            false
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            true
+        }
+
+        lifecycleScope.launch {
+            dataStore.storeValue(PreferenceKeys.THEME_NIGHT, isNightMode)
+        }
+    }
+
+    /**
+     * Read the night mode from the DataStore.
+     * Restore the night theme if in the DataStore is stored night.
+     * Restore the day theme if in the DataStore is stored day.
+     */
+    private fun readNightMode() {
         lifecycleScope.launch {
             dataStore.readValue(PreferenceKeys.THEME_NIGHT) {
                 isNightMode = if (this) {
@@ -60,64 +88,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        // Add a button on the toolbar
-        toolbar?.inflateMenu(R.menu.menu)
-        toolbar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.action_menu -> {
-
-                    // Read theme value from the DataStore
-                    isNightMode = if (isNightMode) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                        false
-                    } else {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                        true
-                    }
-
-                    lifecycleScope.launch {
-                        dataStore.storeValue(PreferenceKeys.THEME_NIGHT, isNightMode)
-                    }
-                }
-            }
-            false
-        }
     }
-//
-//    /**
-//     * Save the value
-//     * @param isNightTheme true if theme is night, false if is day.
-//     */
-//    private suspend fun updateTheme(isNightTheme: Boolean) {
-//        dataStore.addToLocalStorage {
-//            this[PreferenceKeys.THEME_NIGHT] = isNightTheme
-//        }
-//    }
-//
-//    /**
-//     * Combination of higher-order function and
-//     * extension function to change the way to save data using DataStore.
-//     * @param mutableFunc function to invoke after edit.
-//     */
-//    private suspend fun DataStore<Preferences>.addToLocalStorage(mutableFunc: MutablePreferences.() -> Unit) {
-//        edit {
-//            mutableFunc(it)
-//        }
-//    }
-//
-//    private fun emitStoredValue(): Flow<Boolean> {
-//        return dataStore.data.catch {
-//            if (it is IOException) {
-//                emit(emptyPreferences())
-//            } else {
-//                throw it
-//            }
-//        }.map {
-//            it[PreferenceKeys.THEME_NIGHT] ?: false
-//        }
-//    }
-//
-
-
 }
