@@ -2,6 +2,12 @@ package com.technicaltest.app.extensions
 
 import android.graphics.Color
 
+/**
+ * Given a color int, change its alpha between
+ * 0 and 255.
+ * @param alpha the new value
+ * @return a new color int
+ */
 fun Int.changeAlpha(alpha: Int) : Int{
     val red = Color.red(this)
     val green = Color.green(this)

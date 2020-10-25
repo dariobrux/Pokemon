@@ -9,6 +9,12 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
+/**
+ * Coroutine method that checks if there is a [PreferencesKey] in the [DataStore].
+ * It catch any exception occurred by reading the data. If data is available, it will be
+ * mapped into the preference, then launch the parameter function on success.
+ * @param func function to invoke on success.
+ */
 suspend inline fun <reified T> DataStore<Preferences>.getFromLocalStorage(PreferencesKey: Preferences.Key<T>, crossinline func: T.() -> Unit) {
     data.catch {
         if (it is IOException) {
@@ -25,12 +31,22 @@ suspend inline fun <reified T> DataStore<Preferences>.getFromLocalStorage(Prefer
     }
 }
 
+/**
+ * Coroutine method that insert a value of a particular [Preferences.Key] in the [DataStore].
+ * @param key the key of a preference.
+ * @param value the value to insert.
+ */
 suspend inline fun <reified T> DataStore<Preferences>.storeValue(key: Preferences.Key<T>, value: Any) {
     this.edit {
         it[key] = value as T
     }
 }
 
+/**
+ * Coroutine method that read a value of a particular [Preferences.Key] from the [DataStore].
+ * @param key the key of a preference.
+ * @param responseFunc function to invoke on success.
+ */
 suspend inline fun <reified T> DataStore<Preferences>.readValue(key: Preferences.Key<T>, crossinline responseFunc: T.() -> Unit) {
     this.getFromLocalStorage(key) {
         responseFunc.invoke(this)

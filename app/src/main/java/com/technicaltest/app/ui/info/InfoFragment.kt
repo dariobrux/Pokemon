@@ -1,7 +1,6 @@
 package com.technicaltest.app.ui.info
 
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,6 +16,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.technicaltest.app.R
 import com.technicaltest.app.extensions.changeAlpha
+import com.technicaltest.app.extensions.getDominantColor
 import com.technicaltest.app.models.Pokemon
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.info_fragment.*
@@ -61,24 +61,18 @@ class InfoFragment : Fragment() {
                     return true
                 }
 
-                override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    resource ?: return true
-                    setPaletteBackground(resource)
+                override fun onResourceReady(bitmap: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    bitmap ?: return true
+                    bitmap.getDominantColor(ContextCompat.getColor(requireContext(), R.color.white)).let { color ->
+                        card?.setCardBackgroundColor(color)
+                        containerRoot?.setBackgroundColor(color.changeAlpha(80))
+                        return@let
+                    }
                     return false
                 }
 
             }).into(img)
 
-        }
-    }
-
-    private fun setPaletteBackground(resource: Bitmap) {
-        Palette.Builder(resource).generate {
-            it ?: return@generate
-            val dominantColor = it.getDominantColor(ContextCompat.getColor(requireContext(), R.color.white))
-            card?.setCardBackgroundColor(dominantColor)
-            containerRoot?.setBackgroundColor(dominantColor.changeAlpha(80))
-            return@generate
         }
     }
 }
