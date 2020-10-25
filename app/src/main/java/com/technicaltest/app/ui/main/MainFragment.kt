@@ -1,10 +1,12 @@
 package com.technicaltest.app.ui.main
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MediatorLiveData
@@ -82,6 +84,7 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
             it.setLoadingListener(this)
         }
 
+        btnSort?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.primary))
         btnSort?.setOnClickListener {
             sort.value = sort.value!!.inverse()
         }
@@ -134,7 +137,7 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
         }
     }
 
-    fun refreshPokemonList() {
+    private fun refreshPokemonList() {
         viewModel.refreshPokemon()?.observe(this.viewLifecycleOwner) {
             Timber.d("Refresh the pokemon list. Displayed ${it.data?.pokemonList ?: 0} pokemon.")
 
