@@ -2,27 +2,20 @@ package com.technicaltest.app.api
 
 import com.technicaltest.app.other.Resource
 import retrofit2.Response
-import javax.inject.Inject
 
 /**
  *
- * Created by Dario Bruzzese on 22/10/2020.
- *
- * This class get the results from the api service and map the result object
- * to an useful object with the status.
+ * Created by Dario Bruzzese on 24/10/2020.
  *
  */
-
-class ApiHelper @Inject constructor(private val apiService: ApiService) {
-
-    suspend fun getPokemon(offset: Int, limit: Int) = getResult { apiService.pokemon(offset, limit) }
+abstract class ApiHelper {
 
     /**
      * Map the result of the [call] to a [Resource] object.
      * @param call the api service function to invoke and map the result.
      * @return the [Resource] object with the the response as content.
      */
-    private suspend fun <T> getResult(call: suspend () -> Response<T>): Resource<T> {
+    suspend fun <T> getResult(call: suspend () -> Response<T>): Resource<T> {
         try {
             val response = call()
             if (response.isSuccessful) {

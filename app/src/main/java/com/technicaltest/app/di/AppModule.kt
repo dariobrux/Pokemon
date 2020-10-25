@@ -2,11 +2,14 @@ package com.technicaltest.app.di
 
 import android.content.Context
 import com.technicaltest.app.BuildConfig
-import com.technicaltest.app.api.ApiHelper
-import com.technicaltest.app.api.ApiService
+import com.technicaltest.app.api.PokemonApiHelper
+import com.technicaltest.app.api.PokemonDataApiHelper
+import com.technicaltest.app.api.PokemonDataService
+import com.technicaltest.app.api.PokemonService
 import com.technicaltest.app.database.PokemonDao
 import com.technicaltest.app.database.PokemonDatabase
 import com.technicaltest.app.other.Constants
+import com.technicaltest.app.ui.info.InfoRepository
 import com.technicaltest.app.ui.main.MainRepository
 import dagger.Module
 import dagger.Provides
@@ -57,11 +60,19 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+    fun providePokemonService(retrofit: Retrofit): PokemonService = retrofit.create(PokemonService::class.java)
 
     @Provides
     @Singleton
-    fun provideApiHelper(apiService: ApiService) = ApiHelper(apiService)
+    fun providePokemonDataService(retrofit: Retrofit): PokemonDataService = retrofit.create(PokemonDataService::class.java)
+
+    @Provides
+    @Singleton
+    fun providePokemonApiHelper(pokemonService: PokemonService) = PokemonApiHelper(pokemonService)
+
+    @Provides
+    @Singleton
+    fun providePokemonDataApiHelper(pokemonDataService: PokemonDataService) = PokemonDataApiHelper(pokemonDataService)
 
     @Singleton
     @Provides
@@ -73,5 +84,9 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRepository(apiHelper: ApiHelper, dao: PokemonDao) = MainRepository(apiHelper, dao)
+    fun provideMainRepository(pokemonApiHelper: PokemonApiHelper, dao: PokemonDao) = MainRepository(pokemonApiHelper, dao)
+
+    @Singleton
+    @Provides
+    fun provideInfoRepository(pokemonDataApiHelper: PokemonDataApiHelper, dao: PokemonDao) = InfoRepository(pokemonDataApiHelper, dao)
 }

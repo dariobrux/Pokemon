@@ -1,10 +1,12 @@
-package com.technicaltest.app.ui.main
+package com.technicaltest.app.ui.info
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.technicaltest.app.api.PokemonApiHelper
+import com.technicaltest.app.api.PokemonDataApiHelper
 import com.technicaltest.app.database.PokemonDao
 import com.technicaltest.app.models.DataInfo
+import com.technicaltest.app.models.PokemonData
 import com.technicaltest.app.other.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,24 +23,7 @@ import javax.inject.Inject
  * between the restful api and the database.
  *
  */
-class MainRepository @Inject constructor(private val pokemonApiHelper: PokemonApiHelper, private val pokemonDao: PokemonDao) {
-
-    /**
-     * Increment it to display the next set of items.
-     */
-    private var offset = 0
-
-    /**
-     * Max number of items to download in once.
-     */
-    private var limit = 20
-
-    /**
-     * Reset the offset to start from the first pokemon.
-     */
-    fun resetOffset() {
-        offset = 0
-    }
+class InfoRepository @Inject constructor(private val pokemonDataApiHelper: PokemonDataApiHelper, private val pokemonDao: PokemonDao) {
 
     /**
      * Get the list of the pokemon from a restful api or from the database.
@@ -48,41 +33,39 @@ class MainRepository @Inject constructor(private val pokemonApiHelper: PokemonAp
      * store this list in the database.
      * @return the [DataInfo] object mapped into a [Resource], inside a [LiveData].
      */
-    fun getPokemon(): LiveData<Resource<DataInfo>> {
-        val mutableLiveData: MutableLiveData<Resource<DataInfo>> = MutableLiveData()
+    fun getPokemonData(name: String, url: String): LiveData<Resource<PokemonData>> {
+        val mutableLiveData: MutableLiveData<Resource<PokemonData>> = MutableLiveData()
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            var dataInfo: DataInfo? = null
+            var pokemonData: PokemonData? = null
 
             // Read first the local pokemon list from database.
-            val localPokemonList = pokemonDao.getPokemonList(offset, limit)
+            val localPokemon = pokemonDao.getPokemonData(name)
 
             // If it is not empty, read and pass the data retrieved from database.
-            if (!localPokemonList.isNullOrEmpty()) {
-                Timber.d("Read the pokemon list from the database.")
-                dataInfo = DataInfo().apply {
-                    pokemonList = localPokemonList
-                }
+            if (localPokemon != null) {
+                Timber.d("Read the pokemon from the database.")
+                pokemonData = localPokemon
             } else {
 
-                Timber.d("Trying to retrieve the pokemon list from url.")
+                Timber.d("Trying to retrieve the pokemon from url.")
 
-                // If the database is empty, download the pokemon from the online API and
-                // store them in the database.
+                // If the database is empty, download the pokemon from the api and
+                // store it in the database.
                 kotlin.runCatching {
-                    pokemonApiHelper.getPokemon(offset, limit)
+                    pokemonDataApiHelper.getPokemonData(url)
                 }.onSuccess {
-                    dataInfo = if (it.status == Resource.Status.SUCCESS) {
+                    pokemonData = if (it.status == Resource.Status.SUCCESS) {
                         it.data
                     } else {
                         null
                     }
 
                     // Store in the database.
-                    dataInfo?.pokemonList?.let { pokemonList ->
-                        Timber.d("Insert the pokemon list in the database.")
-                        pokemonDao.insertPokemonList(pokemonList)
+                    pokemonData?.let { data ->
+                        Timber.d("Insert the pokemon in the database.")
+                        pokemonDao.insertPokemonData(data)
                     }
                 }.onFailure {
                     Timber.w("Problems while retrieve the pokemon list.")
@@ -90,10 +73,7 @@ class MainRepository @Inject constructor(private val pokemonApiHelper: PokemonAp
             }
 
             withContext(Dispatchers.Main) {
-                mutableLiveData.value = Resource(Resource.Status.SUCCESS, dataInfo, null)
-                dataInfo?.also {
-                    offset += limit
-                }
+                mutableLiveData.value = Resource(Resource.Status.SUCCESS, pokemonData, null)
             }
         }
 

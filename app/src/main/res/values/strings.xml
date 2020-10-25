@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Pokémon</string>
+    <string name="base_experience">Base experience: %d</string>
+    <string name="height">Height: %d</string>
+    <string name="weight">Weight: %d</string>
+    <string name="a_z_sorting">A-Z Sorting</string>
+    <string name="num_sorting">Num sorting</string>
 </resources>

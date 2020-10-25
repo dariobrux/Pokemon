@@ -7,18 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.MediatorLiveData
 import androidx.navigation.fragment.NavHostFragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 import com.technicaltest.app.R
+import com.technicaltest.app.extensions.getIdFromUrl
 import com.technicaltest.app.models.Pokemon
-import com.technicaltest.app.ui.adapters.PokemonAdapter
 import com.technicaltest.app.ui.utils.VerticalSpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_fragment.*
 import timber.log.Timber
+
 
 /**
  *
@@ -34,17 +34,17 @@ import timber.log.Timber
  */
 
 @AndroidEntryPoint
-class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.OnPokemonSelectedListener {
+class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPokemonSelectedListener {
 
     private val viewModel: MainViewModel by viewModels()
 
-    private lateinit var adapter: PokemonAdapter
+    private lateinit var adapter: MainAdapter
 
     private val pokemonList = mutableListOf<Pokemon>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        adapter = PokemonAdapter(requireContext(), pokemonList, this)
+        adapter = MainAdapter(requireContext(), pokemonList, this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -53,19 +53,62 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.O
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         getPokemonList()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        recycler?.let {
+            it.layoutManager = LinearLayoutManager(requireContext())
+            it.addItemDecoration(VerticalSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_space)))
+            it.adapter = adapter
+            it.setLoadingListener(this)
+        }
+
+        fab?.setOnClickListener {
+            viewModel.switchSort()
+        }
+
+        viewModel.isSortByName.observe(this.viewLifecycleOwner) { isSortByName ->
+            fab?.text =if (isSortByName) {
+                sortByName()
+                getString(R.string.num_sorting)
+            } else {
+                sortById()
+                getString(R.string.a_z_sorting)
+            }
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun sortById() {
+        pokemonList.sortBy { pokemon ->
+            pokemon.url?.getIdFromUrl()
+        }
     }
 
     private fun getPokemonList() {
         viewModel.getPokemon()?.observe(this.viewLifecycleOwner) {
             Timber.d("Observer the dataInfo object. It contains ${it.data?.pokemonList?.size ?: 0} pokemon")
             pokemonList.addAll(it.data?.pokemonList ?: emptyList())
+
+            // Sort by name
+            if (viewModel.isSortByName.value == true) {
+                sortByName()
+            } else {
+                sortById()
+            }
+
             adapter.notifyDataSetChanged()
 
             // Tells the recyclerView that the items are loaded,
             // to continue to use the loadMore functionality.
             recycler?.loadMoreComplete()
+        }
+    }
+
+    private fun sortByName() {
+        pokemonList.sortBy { pokemon ->
+            pokemon.name
         }
     }
 
@@ -75,19 +118,18 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, PokemonAdapter.O
 
             pokemonList.clear()
             pokemonList.addAll(it.data?.pokemonList ?: emptyList())
+
+            // Sort by name
+            if (viewModel.isSortByName.value == true) {
+                sortByName()
+            } else {
+                sortById()
+            }
+
             adapter.notifyDataSetChanged()
 
             // Tells the recyclerView that the items are refreshed.
             recycler?.refreshComplete()
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recycler?.let {
-            it.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
-            it.addItemDecoration(VerticalSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_space)))
-            it.adapter = adapter
-            it.setLoadingListener(this)
         }
     }
 
