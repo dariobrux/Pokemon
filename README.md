@@ -9,6 +9,12 @@
 
 This application uses the Pokémon API https://pokeapi.co/ to show a list of Pokémon and a very minimal info screen containing some information about the pokémon, like the base experience, the height and the weight.
 
+| Tables   |      Are      |  Cool |
+|----------|:-------------:|------:|
+| col 1 is |  left-aligned | $1600 |
+| col 2 is |    centered   |   $12 |
+| col 3 is | right-aligned |    $1 |
+
 As from subtitle, I created this simple app using the modern practice and technologies:
 * Kotlin Coroutines
 * MVVM + Repository Pattern
