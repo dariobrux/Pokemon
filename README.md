@@ -10,11 +10,11 @@
 This application uses the Pokémon API https://pokeapi.co/ to show a list of Pokémon and a very minimal info screen containing some information about the pokémon, like the base experience, the height and the weight.
 
 As from subtitle, I created this simple app using the modern practice and technologies:
-Kotlin Coroutines
-MVVM + Repository Pattern
-Hilt
-Reftofit
-DataStore
-Navigation Component
-Unit Test
-Integration Test
+* Kotlin Coroutines
+* MVVM + Repository Pattern
+* Hilt
+* Reftofit
+* DataStore
+* Navigation Component
+* Unit Test
+* Integration Test
