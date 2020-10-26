@@ -48,6 +48,8 @@ class MainAdapter(private val context: Context, private val items: List<Pokemon>
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val pokemon = items[position]
 
+        holder.card.animate().scaleX(1f).scaleY(1f).setDuration(200).start()
+
         Glide.with(context.applicationContext).asBitmap().load(pokemon.urlPicture).diskCacheStrategy(DiskCacheStrategy.ALL).listener(object : RequestListener<Bitmap> {
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
                 Timber.e("Image loading failed")
