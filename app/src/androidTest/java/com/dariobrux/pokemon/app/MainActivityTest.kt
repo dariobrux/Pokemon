@@ -65,6 +65,7 @@ class MainActivityTest {
     @Test
     fun testFirstPokemonClicked() {
         scenario = launchActivity()
+        Thread.sleep(2000)
         onView(withText("Bulbasaur")).perform(click())
     }
 
