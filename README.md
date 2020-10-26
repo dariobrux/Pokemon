@@ -3,6 +3,9 @@
 Kotlin Coroutines + MVVM with Repository Pattern + Hilt + Room + Retrofit + DataStore + Navigation Component + Unit Test + Integration Test.
 
 ![alt text](https://github.com/dariobrux/Pokemon/blob/main/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png?raw=true)
+![alt text](https://teambeyond.net/wp-content/uploads/2016/07/Pokemon-Header.jpg?raw=true)
+
+
 
 This application uses the Pokémon API https://pokeapi.co/ to show a list of Pokémon and an easy info screen with some information like the height and the weight.
 
