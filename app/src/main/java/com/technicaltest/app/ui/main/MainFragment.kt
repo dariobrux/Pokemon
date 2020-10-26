@@ -119,6 +119,11 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
         }
     }
 
+    override fun onDestroy() {
+        viewModel.resetOffset()
+        super.onDestroy()
+    }
+
     /**
      * Sort the list by the pokemon id.
      */

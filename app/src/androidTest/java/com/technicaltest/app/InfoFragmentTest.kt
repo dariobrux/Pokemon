@@ -11,6 +11,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import okhttp3.internal.wait
 import org.junit.After
 import org.junit.Assert
 import org.junit.Test
@@ -22,7 +23,7 @@ import org.junit.runner.RunWith
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 @RunWith(AndroidJUnit4::class)
-class MainActivityTest {
+class InfoFragmentTest {
 
     lateinit var scenario: ActivityScenario<MainActivity>
 
@@ -32,44 +33,56 @@ class MainActivityTest {
     }
 
     @Test
-    fun useAppContext() {
+    fun testInfoScreenVisible() {
         scenario = launchActivity()
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        Assert.assertEquals("com.dariobrux.pokemon.app", appContext.packageName)
-    }
-
-    @Test
-    fun testIsRecyclerDisplayed() {
-        scenario = launchActivity()
-        onView(withId(R.id.recycler)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun testRecyclerSwipeDownAndUp() {
-        scenario = launchActivity()
-        onView(withId(R.id.recycler)).perform(swipeUp())
-        onView(withId(R.id.recycler)).perform(swipeDown())
-    }
-
-    @Test
-    fun testIsButtonSortDisplayed() {
-        scenario = launchActivity()
-        onView(withId(R.id.recycler)).perform(swipeUp())
-        onView(withId(R.id.btnSort)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun testButtonSortClicked() {
-        scenario = launchActivity()
-        onView(withId(R.id.recycler)).perform(swipeUp())
-        onView(withId(R.id.btnSort)).perform(click())
-        onView(withId(R.id.recycler)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun testFirstPokemonClicked() {
-        scenario = launchActivity()
+        Thread.sleep(2000)
         onView(withText("Bulbasaur")).perform(click())
+        onView(withId(R.id.containerRoot)).check(matches(isDisplayed()))
     }
 
+    @Test
+    fun testCardVisible() {
+        scenario = launchActivity()
+        Thread.sleep(2000)
+        onView(withText("Bulbasaur")).perform(click())
+        Thread.sleep(2000)
+        onView(withId(R.id.card)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testNameVisible() {
+        scenario = launchActivity()
+        Thread.sleep(2000)
+        onView(withText("Bulbasaur")).perform(click())
+        Thread.sleep(2000)
+        onView(withId(R.id.txtName)).check(matches(isDisplayed()))
+        onView(withText("Bulbasaur")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testExperience() {
+        scenario = launchActivity()
+        Thread.sleep(2000)
+        onView(withText("Bulbasaur")).perform(click())
+        Thread.sleep(2000)
+        onView(withText("Base experience: 64")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testHeight() {
+        scenario = launchActivity()
+        Thread.sleep(2000)
+        onView(withText("Bulbasaur")).perform(click())
+        Thread.sleep(2000)
+        onView(withText("Height: 7")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testWeight() {
+        scenario = launchActivity()
+        Thread.sleep(2000)
+        onView(withText("Bulbasaur")).perform(click())
+        Thread.sleep(2000)
+        onView(withText("Weight: 69")).check(matches(isDisplayed()))
+    }
 }

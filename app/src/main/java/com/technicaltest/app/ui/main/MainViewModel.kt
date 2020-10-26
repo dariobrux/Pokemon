@@ -28,7 +28,11 @@ class MainViewModel @ViewModelInject constructor(private val mainRepository: Mai
      * Refresh the pokemon list, reloading from the first pokemon.
      */
     fun refreshPokemon(): LiveData<Resource<DataInfo>>? {
-        mainRepository.resetOffset()
+        resetOffset()
         return getPokemon()
+    }
+
+    fun resetOffset() {
+        mainRepository.resetOffset()
     }
 }

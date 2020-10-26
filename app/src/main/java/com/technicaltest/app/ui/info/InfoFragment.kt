@@ -87,7 +87,7 @@ class InfoFragment : Fragment() {
                     return false
                 }
 
-            }).into(img)
+            }).into(thumb)
         }
     }
 }

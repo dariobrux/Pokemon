@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/img"
+            android:id="@+id/thumb"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/regular_height"
             android:adjustViewBounds="true"
