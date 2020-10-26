@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.technicaltest.app.ui.main.MainFragment"
+        android:name="com.dariobrux.pokemon.app.ui.main.MainFragment"
         android:label="main_fragment"
         tools:layout="@layout/main_fragment" >
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/infoFragment"
-        android:name="com.technicaltest.app.ui.info.InfoFragment"
+        android:name="com.dariobrux.pokemon.app.ui.info.InfoFragment"
         android:label="info_fragment"
         tools:layout="@layout/info_fragment" />
 </navigation>
