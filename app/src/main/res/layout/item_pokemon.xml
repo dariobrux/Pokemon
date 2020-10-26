@@ -4,7 +4,7 @@
     android:id="@+id/card"
     android:scaleX="0"
     android:scaleY="0"
-    app:cardBackgroundColor="#000000"
+    app:cardBackgroundColor="@color/gray"
     android:layout_width="match_parent"
     android:layout_height="@dimen/regular_height"
     android:elevation="@dimen/regular_space"
