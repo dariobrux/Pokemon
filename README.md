@@ -1,4 +1,4 @@
-# All the modern Android technologies for a simple Pokémon app.
+# All the modern Android technologies for a small Pokémon app.
 
 
 ## Kotlin Coroutines + MVVM with Repository Pattern + Hilt + Room + Retrofit + DataStore + Navigation Component + Unit Test + Integration Test.
