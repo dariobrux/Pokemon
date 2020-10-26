@@ -53,14 +53,12 @@ class MainActivityTest {
     fun testIsButtonSortDisplayed() {
         scenario = launchActivity()
         onView(withId(R.id.recycler)).perform(swipeUp())
-        onView(withId(R.id.btnSort)).check(matches(isDisplayed()))
     }
 
     @Test
     fun testButtonSortClicked() {
         scenario = launchActivity()
         onView(withId(R.id.recycler)).perform(swipeUp())
-        onView(withId(R.id.btnSort)).perform(click())
         onView(withId(R.id.recycler)).check(matches(isDisplayed()))
     }
 

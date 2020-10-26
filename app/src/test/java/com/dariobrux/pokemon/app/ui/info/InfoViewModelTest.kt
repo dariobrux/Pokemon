@@ -2,9 +2,6 @@ package com.dariobrux.pokemon.app.ui.info
 
 import androidx.lifecycle.MutableLiveData
 import com.dariobrux.pokemon.app.data.models.PokemonData
-import com.dariobrux.pokemon.app.data.models.sprites.OfficialArtwork
-import com.dariobrux.pokemon.app.data.models.sprites.OtherSprite
-import com.dariobrux.pokemon.app.data.models.sprites.Sprite
 import com.dariobrux.pokemon.app.other.Resource
 import junit.framework.TestCase
 import org.junit.Test
@@ -50,21 +47,5 @@ class InfoViewModelTest : TestCase() {
         `when`(repository.getPokemonData("ditto", "https://pokeapi.co/api/v2/pokemon/ditto")).thenReturn(liveData)
         val pokemonDataResult = viewModel.getPokemonData("ditto", "https://pokeapi.co/api/v2/pokemon/ditto")
         assertEquals(pokemonData.name, pokemonDataResult.value?.data?.name)
-    }
-
-    @Test
-    fun testGetPictureUrl() {
-        val pictureUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
-        val pokemonData = PokemonData().apply {
-            name = "ditto"
-            sprites = Sprite().apply {
-                otherSprites = OtherSprite().apply {
-                    officialArtwork = OfficialArtwork().apply {
-                        frontDefault = pictureUrl
-                    }
-                }
-            }
-        }
-        assertEquals(pictureUrl, viewModel.getPictureUrl(pokemonData))
     }
 }

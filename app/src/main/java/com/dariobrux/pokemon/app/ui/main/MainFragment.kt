@@ -133,6 +133,11 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.resetOffset()
+    }
+
     /**
      * Observe the ViewModel to get the list of the pokemon to show.
      */
