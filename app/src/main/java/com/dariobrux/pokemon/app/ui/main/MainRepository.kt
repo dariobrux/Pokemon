@@ -34,7 +34,7 @@ class MainRepository @Inject constructor(private val pokemonApiHelper: PokemonAp
     /**
      * Max number of items to download in once.
      */
-    private var limit = 20
+    private var limit = 100
 
     /**
      * Reset the offset to start from the first pokemon.
