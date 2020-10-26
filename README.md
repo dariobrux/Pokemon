@@ -11,7 +11,7 @@ This application uses the Pokémon API https://pokeapi.co/ to show a list of Pok
 
 | Tables   |      Are      |  Cool |
 |----------|:-------------:|------:|
-| col 1 is |  left-aligned | $1600 |
+| ![alt text](https://github.com/dariobrux/Pokemon/blob/main/others/photo_2020-10-26%2016.23.33.jpeg) |  ![alt text](https://github.com/dariobrux/Pokemon/blob/main/others/photo_2020-10-26%2016.23.33.jpeg) | ![alt text](https://github.com/dariobrux/Pokemon/blob/main/others/photo_2020-10-26%2016.23.33.jpeg) |
 | col 2 is |    centered   |   $12 |
 | col 3 is | right-aligned |    $1 |
 
