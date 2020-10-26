@@ -1,7 +1,7 @@
 # All the modern Android technologies for a super small Pokémon app.
 
 
-## Kotlin Coroutines + MVVM with Repository Pattern + Hilt + Room + Retrofit + DataStore + Navigation Component + Unit Test + Integration Test.
+## Kotlin Coroutines + MVVM with Repository Pattern + LiveData + Hilt + Room + Retrofit + DataStore + Navigation Component + Unit Test + Integration Test.
 
 <p align="center">
   <img src="https://media.pokemoncentral.it/wiki/thumb/5/53/Logo_Pok%C3%A9mon.png/600px-Logo_Pok%C3%A9mon.png?raw=true">">
