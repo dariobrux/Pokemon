@@ -2,16 +2,23 @@ package com.dariobrux.pokemon.app.ui
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.datastore.DataStore
 import androidx.datastore.preferences.Preferences
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import com.dariobrux.pokemon.app.R
+import com.dariobrux.pokemon.app.other.PreferenceKeys
+import com.dariobrux.pokemon.app.other.extensions.readValue
+import com.dariobrux.pokemon.app.other.extensions.storeValue
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_activity.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+
 
 /**
  *
@@ -48,6 +55,19 @@ class MainActivity : AppCompatActivity() {
      * Current theme
      */
     private var theme = Theme.UNDEFINED
+        set(value) {
+            val isNight = when (value) {
+                Theme.NIGHT_MODE_YES -> {
+                    true
+                }
+                else -> {
+                    false
+                }
+            }
+            refreshUiNightMode(isNight)
+            storeNightMode(isNight)
+            field = value
+        }
 
     enum class Theme {
         NIGHT_MODE_NO,
@@ -62,11 +82,9 @@ class MainActivity : AppCompatActivity() {
         fun inverse(): Theme {
             return when (this) {
                 NIGHT_MODE_YES -> {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                     NIGHT_MODE_NO
                 }
                 else -> {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                     NIGHT_MODE_YES
                 }
             }
@@ -88,18 +106,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
 
         // Check what is the current theme
-        when ((resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)) {
-            Configuration.UI_MODE_NIGHT_NO -> {
-                Timber.tag(TAG).d("Night mode is not active, we're in day time")
-                theme = Theme.NIGHT_MODE_NO
-            }
-            Configuration.UI_MODE_NIGHT_YES -> {
-                Timber.tag(TAG).d("Night mode is active, we're at night")
-                theme = Theme.NIGHT_MODE_YES
-            }
-            Configuration.UI_MODE_NIGHT_UNDEFINED -> {
-                Timber.tag(TAG).d("We don't know what mode we're in, assume notnight")
-                theme = Theme.UNDEFINED
+        readNightMode {
+
+            // Enter here if theme has not already set.
+            when ((resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)) {
+                Configuration.UI_MODE_NIGHT_NO -> {
+                    Timber.tag(TAG).d("Night mode is not active, we're in day time")
+                    theme = Theme.NIGHT_MODE_NO
+                }
+                Configuration.UI_MODE_NIGHT_YES -> {
+                    Timber.tag(TAG).d("Night mode is active, we're at night")
+                    theme = Theme.NIGHT_MODE_YES
+                }
+                Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                    Timber.tag(TAG).d("We don't know what mode we're in, assume notnight")
+                    theme = Theme.UNDEFINED
+                }
             }
         }
 
@@ -110,7 +132,7 @@ class MainActivity : AppCompatActivity() {
                 when (item.itemId) {
                     R.id.action_theme -> {
                         // Switch theme
-                        theme.inverse()
+                        theme = theme.inverse()
                     }
                 }
                 false
@@ -140,6 +162,55 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    /**
+     * Read the night mode from the DataStore.
+     * Restore the night theme if in the DataStore is stored night.
+     * Restore the day theme if in the DataStore is stored day.
+     */
+    private fun readNightMode(defaultFunc: () -> Unit) {
+        lifecycleScope.launch {
+            dataStore.readValue(PreferenceKeys.THEME_NIGHT, {
+                theme = if (this) {
+                    Theme.NIGHT_MODE_YES
+                } else {
+                    Theme.NIGHT_MODE_NO
+                }
+            }, {
+                defaultFunc.invoke()
+            })
+        }
+    }
+
+    /**
+     * Store the night mode into the DataStore
+     * @param isNight true if is in night mode, false otherwise.
+     */
+    private fun storeNightMode(isNight: Boolean) {
+        lifecycleScope.launch {
+            dataStore.storeValue(PreferenceKeys.THEME_NIGHT, isNight)
+        }
+    }
+
+    /**
+     * Change the colors of the ui when the app is in day/dark mode.
+     */
+    private fun refreshUiNightMode(isNight: Boolean) {
+        val color = if (isNight) {
+            ContextCompat.getColor(this, R.color.dark) to ContextCompat.getColor(this, R.color.black)
+        } else {
+            ContextCompat.getColor(this, R.color.day) to ContextCompat.getColor(this, R.color.white)
+        }
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = color.first
+        window.navigationBarColor = color.first
+        toolbar?.setBackgroundColor(color.first)
+        bottomBarVisualization?.setBackgroundColor(color.first)
+        bottomBarSort?.setBackgroundColor(color.first)
+        mainContainerRoot?.setBackgroundColor(color.second)
+
     }
 
     companion object {

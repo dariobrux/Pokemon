@@ -3,10 +3,7 @@ package com.dariobrux.pokemon.app.data.models
 import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
-import com.dariobrux.pokemon.app.data.models.sprites.Sprite
-import com.dariobrux.pokemon.app.data.models.sprites.typeConverters.SpriteConverter
 
 /**
  *
@@ -27,7 +24,4 @@ class PokemonData {
     var height = 0
 
     var weight = 0
-
-    @TypeConverters(SpriteConverter::class)
-    var sprites: Sprite? = null
 }

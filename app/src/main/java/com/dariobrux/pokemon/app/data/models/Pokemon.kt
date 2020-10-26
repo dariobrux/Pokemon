@@ -23,18 +23,26 @@ class Pokemon : Serializable {
 
     var url: String? = ""
 
+    var urlPicture: String? = ""
+
+    var num: Int? = -1
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
         other as Pokemon
         if (name != other.name) return false
         if (url != other.url) return false
+        if (urlPicture != other.urlPicture) return false
+        if (num != other.num) return false
         return true
     }
 
     override fun hashCode(): Int {
         var result = name.hashCode()
         result = 31 * result + (url?.hashCode() ?: 0)
+        result = 31 * result + (urlPicture?.hashCode() ?: 0)
+        result = 31 * result + (num?.hashCode() ?: 0)
         return result
     }
 }

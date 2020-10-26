@@ -4,6 +4,7 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
+import com.dariobrux.pokemon.app.other.extensions.dpToPx
 
 /**
  *
@@ -16,7 +17,7 @@ class LinearSpaceItemDecoration(private val space: Int) : ItemDecoration() {
         parent.adapter?.let {
             val position = parent.getChildAdapterPosition(view)
             if (position < it.itemCount) {
-                outRect.bottom = space
+                outRect.bottom = space.dpToPx()
             }
         }
     }

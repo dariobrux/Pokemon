@@ -2,10 +2,13 @@ package com.dariobrux.pokemon.app.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.dariobrux.pokemon.app.R
 import com.dariobrux.pokemon.app.data.remote.PokemonApiHelper
 import com.dariobrux.pokemon.app.data.local.PokemonDao
 import com.dariobrux.pokemon.app.data.models.DataInfo
+import com.dariobrux.pokemon.app.other.Constants
 import com.dariobrux.pokemon.app.other.Resource
+import com.dariobrux.pokemon.app.other.extensions.getIdFromUrl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -82,6 +85,10 @@ class MainRepository @Inject constructor(private val pokemonApiHelper: PokemonAp
 
                     // Store in the database.
                     dataInfo?.pokemonList?.let { pokemonList ->
+                        pokemonList.forEach { pokemon ->
+                            pokemon.num = pokemon.url?.getIdFromUrl() ?: -1
+                            pokemon.urlPicture = String.format(Constants.BASE_PICTURE_URL, pokemon.num)
+                        }
                         Timber.d("Insert the pokemon list in the database.")
                         pokemonDao.insertPokemonList(pokemonList)
                     }
