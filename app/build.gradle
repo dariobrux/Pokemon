@@ -128,4 +128,8 @@ dependencies {
     // https://github.com/XRecyclerView/XRecyclerView
     implementation 'com.jcodecraeer:xrecyclerview:1.6.0'
 
+    // ExpandableBottomBar
+    // https://github.com/st235/ExpandableBottomBar
+    implementation 'com.github.st235:expandablebottombar:1.3.0'
+
 }
