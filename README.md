@@ -10,7 +10,7 @@
 This application uses the Pokémon API https://pokeapi.co/ to show a list of Pokémon and a very minimal info screen containing some information about the pokémon, like the base experience, the height and the weight.
 
 | List View   |      Grid View      |  Detail |
-|:----------:|:-------------:|------:|
+|:----------:|:-------------:|:------:|
 | ![alt text](https://github.com/dariobrux/Pokemon/blob/main/others/photo_2020-10-26%2016.23.33.jpeg) |  ![alt text](https://github.com/dariobrux/Pokemon/blob/main/others/photo_2020-10-26%2016.23.42.jpeg) | ![alt text](https://github.com/dariobrux/Pokemon/blob/main/others/photo_2020-10-26%2016.23.48.jpeg) |
 | ![alt text](https://github.com/dariobrux/Pokemon/blob/main/others/photo_2020-10-26%2016.23.39.jpeg) |    ![alt text](https://github.com/dariobrux/Pokemon/blob/main/others/photo_2020-10-26%2016.23.44.jpeg)   |   ![alt text](https://github.com/dariobrux/Pokemon/blob/main/others/photo_2020-10-26%2016.23.50.jpeg) |
 
