@@ -24,6 +24,7 @@
             android:layout_height="@dimen/regular_height"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
+            android:padding="@dimen/regular_space"
             android:scaleType="centerInside" />
 
     </androidx.cardview.widget.CardView>

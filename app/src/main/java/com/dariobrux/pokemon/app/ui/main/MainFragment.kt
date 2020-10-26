@@ -1,8 +1,6 @@
 package com.dariobrux.pokemon.app.ui.main
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,14 +9,16 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jcodecraeer.xrecyclerview.XRecyclerView
-import com.dariobrux.pokemon.app.ui.MainActivity
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.dariobrux.pokemon.app.R
+import com.dariobrux.pokemon.app.data.models.Pokemon
 import com.dariobrux.pokemon.app.other.extensions.getIdFromUrl
 import com.dariobrux.pokemon.app.other.extensions.toMainActivity
-import com.dariobrux.pokemon.app.data.models.Pokemon
+import com.dariobrux.pokemon.app.ui.MainActivity
 import com.dariobrux.pokemon.app.ui.utils.GridSpaceItemDecoration
 import com.dariobrux.pokemon.app.ui.utils.LinearSpaceItemDecoration
+import com.jcodecraeer.xrecyclerview.ProgressStyle
+import com.jcodecraeer.xrecyclerview.XRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_fragment.*
 import timber.log.Timber
@@ -60,19 +60,10 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
 
         // Set the RecyclerView with its LayoutManager, ItemDecorator, Adapter and callbacks.
         recycler?.let {
-//            it.layoutManager = GridLayoutManager(requireContext(), 1, RecyclerView.VERTICAL, false)
-//            it.addItemDecoration(LinearSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_space)))
+            it.setLoadingMoreProgressStyle(ProgressStyle.Pacman)
             it.adapter = viewModel.adapter
             it.setLoadingListener(this)
         }
-
-//        // Set the button Sort with the background color and the callback.
-//        btnSort?.let {
-//            it.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.primary))
-//            it.setOnClickListener {
-//                sort.value = sort.value!!.inverse()
-//            }
-//        }
 
         // At this point, I must observe the ViewModel to get the updated list
         // of pokemon only if the current list is empty. I let do in this way

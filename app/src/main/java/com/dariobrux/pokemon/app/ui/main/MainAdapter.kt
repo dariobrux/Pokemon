@@ -2,6 +2,7 @@ package com.dariobrux.pokemon.app.ui.main
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,8 @@ import com.dariobrux.pokemon.app.R
 import com.dariobrux.pokemon.app.other.extensions.getDominantColor
 import com.dariobrux.pokemon.app.other.extensions.getIdFromUrl
 import com.dariobrux.pokemon.app.data.models.Pokemon
+import com.dariobrux.pokemon.app.other.extensions.animateBackgroundColor
+import com.dariobrux.pokemon.app.other.extensions.animateCardBackgroundColor
 import timber.log.Timber
 import java.util.*
 
@@ -56,7 +59,7 @@ class MainAdapter(private val context: Context, private val items: List<Pokemon>
             override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                 resource ?: return true
                 resource.getDominantColor(ContextCompat.getColor(context, R.color.white)) { color ->
-                    holder.card.setCardBackgroundColor(color)
+                    holder.card.animateCardBackgroundColor(Color.parseColor("#000000"), color)
                 }
                 return false
             }

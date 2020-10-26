@@ -15,11 +15,8 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.dariobrux.pokemon.app.R
-import com.dariobrux.pokemon.app.other.extensions.changeAlpha
-import com.dariobrux.pokemon.app.other.extensions.getDominantColor
 import com.dariobrux.pokemon.app.data.models.Pokemon
-import com.dariobrux.pokemon.app.other.extensions.toColorDrawable
-import com.dariobrux.pokemon.app.other.extensions.toMainActivity
+import com.dariobrux.pokemon.app.other.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.info_fragment.*
 import kotlinx.android.synthetic.main.main_activity.*
@@ -75,7 +72,7 @@ class InfoFragment : Fragment() {
             txtHeight?.text = getString(R.string.height, pokemonData.height)
             txtWeight?.text = getString(R.string.weight, pokemonData.weight)
 
-            Glide.with(requireContext()).asBitmap().load(viewModel.getPictureUrl(pokemonData)).listener(object : RequestListener<Bitmap> {
+            Glide.with(requireContext()).asBitmap().load(pokemon.urlPicture).listener(object : RequestListener<Bitmap> {
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
                     Timber.e("Image loading failed")
                     return true
@@ -87,23 +84,13 @@ class InfoFragment : Fragment() {
                     bitmap ?: return true
                     bitmap.getDominantColor(ContextCompat.getColor(requireContext(), R.color.white)) { color ->
                         card?.setCardBackgroundColor(color)
-                        animateBackgroundColor(color.changeAlpha(190))
+                        val startColor = requireActivity().toMainActivity()?.mainContainerRoot?.background?.toColorDrawable()?.color ?: return@getDominantColor
+                        containerRoot?.animateBackgroundColor(startColor, color.changeAlpha(190))
                     }
                     return false
                 }
 
             }).into(thumb)
         }
-    }
-
-    private fun animateBackgroundColor(toColor: Int) {
-        val startColor = requireActivity().toMainActivity()?.mainContainerRoot?.background?.toColorDrawable()?.color ?: return
-        val anim: ValueAnimator = ValueAnimator.ofArgb(startColor, toColor)
-        anim.duration = 200
-        anim.addUpdateListener {
-            val color = it.animatedValue as Int
-            containerRoot?.setBackgroundColor(color)
-        }
-        anim.start()
     }
 }

@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.dariobrux.pokemon.app.data.models.Pokemon
 import com.dariobrux.pokemon.app.data.models.PokemonData
-import com.dariobrux.pokemon.app.data.models.sprites.Sprite
 
 /**
  *
@@ -19,8 +18,7 @@ import com.dariobrux.pokemon.app.data.models.sprites.Sprite
 @Database(
     exportSchema = false, version = 1, entities = [
         Pokemon::class,
-        PokemonData::class,
-        Sprite::class
+        PokemonData::class
     ]
 )
 abstract class PokemonDatabase : RoomDatabase() {
