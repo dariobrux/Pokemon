@@ -3,7 +3,9 @@
     <string name="base_experience">Base experience: %d</string>
     <string name="height">Height: %d</string>
     <string name="weight">Weight: %d</string>
-    <string name="a_z_sorting">A-Z Sorting</string>
-    <string name="num_sorting">Num sorting</string>
+    <string name="a_z_sorting">A-Z</string>
+    <string name="num_sorting">N°</string>
     <string name="switch_theme">Switch Theme</string>
+    <string name="list">List</string>
+    <string name="grid">Grid</string>
 </resources>

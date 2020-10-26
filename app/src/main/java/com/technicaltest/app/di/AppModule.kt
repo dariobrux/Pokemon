@@ -46,6 +46,10 @@ object AppModule {
     @Provides
     fun provideVisualization() = MutableLiveData(MainActivity.Visualization.LIST)
 
+    @Singleton
+    @Provides
+    fun provideSorting() = MutableLiveData(MainActivity.Sorting.NUM)
+
     @Provides
     fun provideBaseUrl() = Constants.BASE_URL
 

@@ -45,25 +45,6 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
      */
     private val viewModel: MainViewModel by viewModels()
 
-    /**
-     * The current sort mode. The first time the list is sorted for ID.
-     */
-    private var sort = MutableLiveData(Sort.ID)
-
-    enum class Sort {
-        NAME, ID;
-
-        /**
-         * Invert sort.
-         * ID -> Name
-         * Name -> ID
-         */
-        fun inverse(): Sort {
-            return if (this == ID) NAME
-            else ID
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (viewModel.adapter == null) {
@@ -85,13 +66,13 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
             it.setLoadingListener(this)
         }
 
-        // Set the button Sort with the background color and the callback.
-        btnSort?.let {
-            it.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.primary))
-            it.setOnClickListener {
-                sort.value = sort.value!!.inverse()
-            }
-        }
+//        // Set the button Sort with the background color and the callback.
+//        btnSort?.let {
+//            it.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.primary))
+//            it.setOnClickListener {
+//                sort.value = sort.value!!.inverse()
+//            }
+//        }
 
         // At this point, I must observe the ViewModel to get the updated list
         // of pokemon only if the current list is empty. I let do in this way
@@ -102,17 +83,20 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
         }
 
         // Observe the sort mode to refresh the list and the sort button.
-        sort.observe(this.viewLifecycleOwner) {
-            btnSort?.text = if (it == Sort.NAME) {
-                sortByName()
-                getString(R.string.num_sorting)
-            } else {
-                sortById()
-                getString(R.string.a_z_sorting)
+        requireActivity().toMainActivity()?.sorting?.observe(this.viewLifecycleOwner) { sorting ->
+            sorting ?: return@observe
+            when (sorting) {
+                MainActivity.Sorting.AZ -> {
+                    sortByName()
+                }
+                MainActivity.Sorting.NUM -> {
+                    sortById()
+                }
             }
             viewModel.adapter?.notifyDataSetChanged()
         }
 
+        // Observe the visualization to transform the list to grid and vice versa.
         requireActivity().toMainActivity()?.visualization?.observe(this.viewLifecycleOwner) { visualization ->
             visualization ?: return@observe
             recycler?.let { rec ->
@@ -167,7 +151,7 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
             viewModel.pokemonList.addAll(it.data?.pokemonList ?: emptyList())
 
             // Sort by name
-            if (sort.value == Sort.NAME) {
+            if (requireActivity().toMainActivity()?.sorting?.value == MainActivity.Sorting.AZ) {
                 sortByName()
             } else {
                 sortById()
@@ -194,7 +178,7 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
             viewModel.pokemonList.addAll(it.data?.pokemonList ?: emptyList())
 
             // Sort by name
-            if (sort.value == Sort.NAME) {
+            if (requireActivity().toMainActivity()?.sorting?.value == MainActivity.Sorting.AZ) {
                 sortByName()
             } else {
                 sortById()

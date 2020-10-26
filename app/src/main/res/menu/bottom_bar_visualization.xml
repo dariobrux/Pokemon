@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/list"
-        android:title="List"
+        android:title="@string/list"
         android:icon="@drawable/list"
         app:exb_color="@color/white" />
 
     <item
         android:id="@+id/grid"
         android:icon="@drawable/grid"
-        android:title="Grid"
+        android:title="@string/grid"
         app:exb_color="@color/white"/>
 </menu>
