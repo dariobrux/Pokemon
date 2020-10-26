@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
@@ -44,9 +45,7 @@ class MainAdapter(private val context: Context, private val items: List<Pokemon>
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val pokemon = items[position]
 
-        val id = pokemon.url?.getIdFromUrl() ?: -1
-        val url = String.format(context.getString(R.string.url_pokemon_image), id)
-        Glide.with(context.applicationContext).asBitmap().load(url).listener(object : RequestListener<Bitmap> {
+        Glide.with(context.applicationContext).asBitmap().load(pokemon.urlPicture).diskCacheStrategy(DiskCacheStrategy.ALL).listener(object : RequestListener<Bitmap> {
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
                 Timber.e("Image loading failed")
                 return true
@@ -55,7 +54,7 @@ class MainAdapter(private val context: Context, private val items: List<Pokemon>
             // When the bitmap is loaded, I get the dominant color of the image
             // and use it as background color.
             override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                resource?: return true
+                resource ?: return true
                 resource.getDominantColor(ContextCompat.getColor(context, R.color.white)) { color ->
                     holder.card.setCardBackgroundColor(color)
                 }
@@ -65,7 +64,7 @@ class MainAdapter(private val context: Context, private val items: List<Pokemon>
         }).into(holder.img)
 
         holder.txtName.text = pokemon.name.capitalize(Locale.getDefault())
-        holder.txtNumber.text = id.toString()
+        holder.txtNumber.text = pokemon.num?.toString() ?: ""
 
         holder.card.setOnClickListener {
             listener?.onPokemonSelected(items[position])
