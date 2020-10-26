@@ -4,6 +4,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.technicaltest.app.MainActivity
 import com.technicaltest.app.models.DataInfo
 import com.technicaltest.app.models.Pokemon
 import com.technicaltest.app.other.Resource
@@ -16,6 +17,11 @@ import com.technicaltest.app.other.Resource
 class MainViewModel @ViewModelInject constructor(private val mainRepository: MainRepository) : ViewModel() {
 
     val pokemonList = mutableListOf<Pokemon>()
+
+    /**
+     * The Adapter to show the items in list.
+     */
+    var adapter: MainAdapter? = null
 
     /**
      * @return the pokemon list.

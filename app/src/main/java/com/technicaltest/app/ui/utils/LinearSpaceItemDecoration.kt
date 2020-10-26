@@ -9,13 +9,13 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
  *
  * Created by Dario Bruzzese on 22/10/2020.
  *
- * This class is the ItemDecoration useful for the RecyclerView.
+ * This class is the ItemDecoration useful for the RecyclerView in list visualization.
  */
-class VerticalSpaceItemDecoration(private val space: Int) : ItemDecoration() {
+class LinearSpaceItemDecoration(private val space: Int) : ItemDecoration() {
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         parent.adapter?.let {
             val position = parent.getChildAdapterPosition(view)
-            if (position < it.itemCount - 1) {
+            if (position < it.itemCount) {
                 outRect.bottom = space
             }
         }
