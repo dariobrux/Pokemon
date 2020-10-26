@@ -1,9 +1,19 @@
 package com.technicaltest.app.extensions
 
 import android.graphics.Color
+import android.graphics.ColorSpace
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import junit.framework.TestCase
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mockito
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
+@Config(manifest= Config.NONE)
+@RunWith(RobolectricTestRunner::class)
 class ColorTest : TestCase() {
 
     @Test

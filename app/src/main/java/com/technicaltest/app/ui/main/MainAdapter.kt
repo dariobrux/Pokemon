@@ -21,8 +21,11 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.technicaltest.app.R
+import com.technicaltest.app.extensions.changeAlpha
+import com.technicaltest.app.extensions.getDominantColor
 import com.technicaltest.app.extensions.getIdFromUrl
 import com.technicaltest.app.models.Pokemon
+import kotlinx.android.synthetic.main.info_fragment.*
 import timber.log.Timber
 import java.util.*
 
@@ -55,13 +58,12 @@ class MainAdapter(private val context: Context, private val items: List<Pokemon>
                 return true
             }
 
+            // When the bitmap is loaded, I get the dominant color of the image
+            // and use it as background color.
             override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                 resource?: return true
-                Palette.Builder(resource).generate {
-                    it?:return@generate
-                    val dominantColor = it.getDominantColor(ContextCompat.getColor(context, R.color.white))
-                    holder.card.setCardBackgroundColor(dominantColor)
-                    return@generate
+                resource.getDominantColor(ContextCompat.getColor(context, R.color.white)) { color ->
+                    holder.card.setCardBackgroundColor(color)
                 }
                 return false
             }

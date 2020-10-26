@@ -36,6 +36,7 @@ class InfoRepository @Inject constructor(private val pokemonDataApiHelper: Pokem
     fun getPokemonData(name: String, url: String): LiveData<Resource<PokemonData>> {
         val mutableLiveData: MutableLiveData<Resource<PokemonData>> = MutableLiveData()
 
+        // This runs into a Coroutine Scope
         CoroutineScope(Dispatchers.IO).launch {
 
             var pokemonData: PokemonData? = null
@@ -72,6 +73,7 @@ class InfoRepository @Inject constructor(private val pokemonDataApiHelper: Pokem
                 }
             }
 
+            // Finish Coroutine and pass on the Main Thread
             withContext(Dispatchers.Main) {
                 mutableLiveData.value = Resource(Resource.Status.SUCCESS, pokemonData, null)
             }

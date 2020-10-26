@@ -15,7 +15,7 @@ import java.io.IOException
  * mapped into the preference, then launch the parameter function on success.
  * @param func function to invoke on success.
  */
-suspend inline fun <reified T> DataStore<Preferences>.getFromLocalStorage(PreferencesKey: Preferences.Key<T>, crossinline func: T.() -> Unit) {
+suspend inline fun <reified T> DataStore<Preferences>.getFromLocalStorage(PreferencesKey: Preferences.Key<T>, crossinline func: T.() -> Unit, crossinline defaultFunc: () -> Unit) {
     data.catch {
         if (it is IOException) {
             emit(emptyPreferences())
@@ -25,8 +25,10 @@ suspend inline fun <reified T> DataStore<Preferences>.getFromLocalStorage(Prefer
     }.map {
         it[PreferencesKey]
     }.collect {
-        it?.let {
+        if (it != null ) {
             func.invoke(it as T)
+        } else {
+            defaultFunc.invoke()
         }
     }
 }
@@ -47,8 +49,10 @@ suspend inline fun <reified T> DataStore<Preferences>.storeValue(key: Preference
  * @param key the key of a preference.
  * @param responseFunc function to invoke on success.
  */
-suspend inline fun <reified T> DataStore<Preferences>.readValue(key: Preferences.Key<T>, crossinline responseFunc: T.() -> Unit) {
-    this.getFromLocalStorage(key) {
+suspend inline fun <reified T> DataStore<Preferences>.readValue(key: Preferences.Key<T>, crossinline responseFunc: T.() -> Unit, crossinline defaultFunc: () -> Unit) {
+    this.getFromLocalStorage(key, {
         responseFunc.invoke(this)
-    }
+    }, {
+        defaultFunc.invoke()
+    })
 }

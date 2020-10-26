@@ -1,13 +1,16 @@
 package com.technicaltest.app.ui.main
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jcodecraeer.xrecyclerview.XRecyclerView
@@ -39,32 +42,47 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPokemonSelectedListener {
 
-    private val viewModel: MainViewModel by viewModels()
-
+    /**
+     * The Adapter to show the items in list.
+     */
     private lateinit var adapter: MainAdapter
 
-    private val pokemonList = mutableListOf<Pokemon>()
+    /**
+     * The ViewModel
+     */
+    private val viewModel: MainViewModel by viewModels()
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        adapter = MainAdapter(requireContext(), pokemonList, this)
+    /**
+     * The current sort mode. The first time the list is sorted for ID.
+     */
+    private var sort = MutableLiveData(Sort.ID)
+
+    enum class Sort {
+        NAME, ID;
+
+        /**
+         * Invert sort.
+         * ID -> Name
+         * Name -> ID
+         */
+        fun inverse(): Sort {
+            return if (this == ID) NAME
+            else ID
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        adapter = MainAdapter(requireContext(), viewModel.pokemonList, this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.main_fragment, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        if (!(activity as MainActivity).isThemeChanged) {
-            getPokemonList()
-        } else {
-            refreshPokemonList()
-        }
-        (activity as MainActivity).isThemeChanged = false
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        // Set the RecyclerView with its LayoutManager, ItemDecorator, Adapter and callbacks.
         recycler?.let {
             it.layoutManager = LinearLayoutManager(requireContext())
             it.addItemDecoration(VerticalSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_space)))
@@ -72,13 +90,25 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
             it.setLoadingListener(this)
         }
 
-        (activity as MainActivity).switchSort.observe(this.viewLifecycleOwner) {
-            it ?: return@observe
-            viewModel.switchSort()
+        // Set the button Sort with the background color and the callback.
+        btnSort?.let {
+            it.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.primary))
+            it.setOnClickListener {
+                sort.value = sort.value!!.inverse()
+            }
         }
 
-        viewModel.isSortByName.observe(this.viewLifecycleOwner) { isSortByName ->
-            (activity as MainActivity).toolbar?.menu?.getItem(0)?.title = if (isSortByName) {
+        // At this point, I must observe the ViewModel to get the updated list
+        // of pokemon only if the current list is empty. I let do in this way
+        // because, when I change the theme, the application is refreshed, and
+        // I could incur in any bug.
+        if (viewModel.pokemonList.isEmpty()) {
+            getPokemonList()
+        }
+
+        // Observe the sort mode to refresh the list and the sort button.
+        sort.observe(this.viewLifecycleOwner) {
+            btnSort?.text = if (it == Sort.NAME) {
                 sortByName()
                 getString(R.string.num_sorting)
             } else {
@@ -89,24 +119,45 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
         }
     }
 
+    override fun onDestroy() {
+        viewModel.resetOffset()
+        super.onDestroy()
+    }
+
+    /**
+     * Sort the list by the pokemon id.
+     */
     private fun sortById() {
-        pokemonList.sortBy { pokemon ->
+        viewModel.pokemonList.sortBy { pokemon ->
             pokemon.url?.getIdFromUrl()
         }
     }
 
+    /**
+     * Sort the list by the pokemon name.
+     */
+    private fun sortByName() {
+        viewModel.pokemonList.sortBy { pokemon ->
+            pokemon.name
+        }
+    }
+
+    /**
+     * Observe the ViewModel to get the list of the pokemon to show.
+     */
     private fun getPokemonList() {
         viewModel.getPokemon()?.observe(this.viewLifecycleOwner) {
             Timber.d("Observer the dataInfo object. It contains ${it.data?.pokemonList?.size ?: 0} pokemon")
-            pokemonList.addAll(it.data?.pokemonList ?: emptyList())
+            viewModel.pokemonList.addAll(it.data?.pokemonList ?: emptyList())
 
             // Sort by name
-            if (viewModel.isSortByName.value == true) {
+            if (sort.value == Sort.NAME) {
                 sortByName()
             } else {
                 sortById()
             }
 
+            // Refresh the adapter.
             adapter.notifyDataSetChanged()
 
             // Tells the recyclerView that the items are loaded,
@@ -115,26 +166,25 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
         }
     }
 
-    private fun sortByName() {
-        pokemonList.sortBy { pokemon ->
-            pokemon.name
-        }
-    }
-
-    fun refreshPokemonList() {
+    /**
+     * Refresh the screen, reloading the pokemon list from the first value
+     */
+    private fun refreshPokemonList() {
         viewModel.refreshPokemon()?.observe(this.viewLifecycleOwner) {
             Timber.d("Refresh the pokemon list. Displayed ${it.data?.pokemonList ?: 0} pokemon.")
 
-            pokemonList.clear()
-            pokemonList.addAll(it.data?.pokemonList ?: emptyList())
+            // Clear the list and reinsert everything retrieved from the ViewModel.
+            viewModel.pokemonList.clear()
+            viewModel.pokemonList.addAll(it.data?.pokemonList ?: emptyList())
 
             // Sort by name
-            if (viewModel.isSortByName.value == true) {
+            if (sort.value == Sort.NAME) {
                 sortByName()
             } else {
                 sortById()
             }
 
+            // Refresh the adapter.
             adapter.notifyDataSetChanged()
 
             // Tells the recyclerView that the items are refreshed.
@@ -142,16 +192,29 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
         }
     }
 
+    /**
+     * Invoked when a pokemon in the list is tapped.
+     * It opens the screen with all the info.
+     * @param pokemon the pokemon tapped.
+     */
     override fun onPokemonSelected(pokemon: Pokemon) {
         NavHostFragment.findNavController(this).navigate(R.id.action_mainFragment_to_infoFragment, Bundle().apply {
             putSerializable("pokemon", pokemon)
         })
     }
 
+    /**
+     * Invoked when I pull to refresh.
+     * It refresh the list.
+     */
     override fun onRefresh() {
         refreshPokemonList()
     }
 
+    /**
+     * Invoked when the list reach the limit scrollable value.
+     * It invoke the viewModel to retrieve other pokemon.
+     */
     override fun onLoadMore() {
         getPokemonList()
     }
