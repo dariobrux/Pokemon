@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.datastore.DataStore
 import androidx.datastore.preferences.Preferences
+import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
@@ -29,6 +30,13 @@ class MainActivity : AppCompatActivity() {
     lateinit var dataStore: DataStore<Preferences>
 
     /**
+     * Current items visualization. This is a public field
+     * because it must be visible from the MainFragment.
+     */
+    @Inject
+    lateinit var visualization: MutableLiveData<Visualization>
+
+    /**
      * Current theme
      */
     private var theme = Theme.UNDEFINED
@@ -43,8 +51,8 @@ class MainActivity : AppCompatActivity() {
          * Night Mode -> Day Mode
          * Day Mode | Undefined -> Night Mode
          */
-        fun inverse() : Theme {
-            return when(this) {
+        fun inverse(): Theme {
+            return when (this) {
                 NIGHT_MODE_YES -> {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                     NIGHT_MODE_NO
@@ -55,6 +63,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    enum class Visualization {
+        LIST,
+        GRID
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,6 +101,18 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 false
+            }
+        }
+
+        // Add the bottom bar item listener to change the items visualization.
+        bottomBar?.onItemSelectedListener = { view, menuItem ->
+            when (menuItem.itemId) {
+                R.id.list -> {
+                    visualization.value = Visualization.LIST
+                }
+                R.id.grid -> {
+                    visualization.value = Visualization.GRID
+                }
             }
         }
     }

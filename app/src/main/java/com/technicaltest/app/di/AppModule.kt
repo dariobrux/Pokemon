@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.datastore.DataStore
 import androidx.datastore.preferences.Preferences
 import androidx.datastore.preferences.createDataStore
+import androidx.lifecycle.MutableLiveData
 import com.technicaltest.app.BuildConfig
+import com.technicaltest.app.MainActivity
 import com.technicaltest.app.api.PokemonApiHelper
 import com.technicaltest.app.api.PokemonDataApiHelper
 import com.technicaltest.app.api.PokemonDataService
@@ -39,6 +41,10 @@ object AppModule {
     @Singleton
     @Provides
     fun provideLocalStorage(@ApplicationContext context: Context) = context.createDataStore(name = "sample")
+
+    @Singleton
+    @Provides
+    fun provideVisualization() = MutableLiveData(MainActivity.Visualization.LIST)
 
     @Provides
     fun provideBaseUrl() = Constants.BASE_URL

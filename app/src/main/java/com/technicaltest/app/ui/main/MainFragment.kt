@@ -1,7 +1,5 @@
 package com.technicaltest.app.ui.main
 
-import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,21 +7,21 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.NavHostFragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 import com.technicaltest.app.MainActivity
 import com.technicaltest.app.R
 import com.technicaltest.app.extensions.getIdFromUrl
+import com.technicaltest.app.extensions.toMainActivity
 import com.technicaltest.app.models.Pokemon
-import com.technicaltest.app.ui.utils.VerticalSpaceItemDecoration
+import com.technicaltest.app.ui.utils.GridSpaceItemDecoration
+import com.technicaltest.app.ui.utils.LinearSpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.main_fragment.*
 import timber.log.Timber
-import javax.inject.Inject
 
 
 /**
@@ -41,11 +39,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPokemonSelectedListener {
-
-    /**
-     * The Adapter to show the items in list.
-     */
-    private lateinit var adapter: MainAdapter
 
     /**
      * The ViewModel
@@ -73,7 +66,9 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = MainAdapter(requireContext(), viewModel.pokemonList, this)
+        if (viewModel.adapter == null) {
+            viewModel.adapter = MainAdapter(requireContext(), viewModel.pokemonList, this)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -84,9 +79,9 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
 
         // Set the RecyclerView with its LayoutManager, ItemDecorator, Adapter and callbacks.
         recycler?.let {
-            it.layoutManager = LinearLayoutManager(requireContext())
-            it.addItemDecoration(VerticalSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_space)))
-            it.adapter = adapter
+//            it.layoutManager = GridLayoutManager(requireContext(), 1, RecyclerView.VERTICAL, false)
+//            it.addItemDecoration(LinearSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_space)))
+            it.adapter = viewModel.adapter
             it.setLoadingListener(this)
         }
 
@@ -115,13 +110,34 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
                 sortById()
                 getString(R.string.a_z_sorting)
             }
-            adapter.notifyDataSetChanged()
+            viewModel.adapter?.notifyDataSetChanged()
         }
-    }
 
-    override fun onDestroy() {
-        viewModel.resetOffset()
-        super.onDestroy()
+        requireActivity().toMainActivity()?.visualization?.observe(this.viewLifecycleOwner) { visualization ->
+            visualization ?: return@observe
+            recycler?.let { rec ->
+                if (rec.itemDecorationCount != 0) rec.removeItemDecorationAt(0)
+                if (rec.layoutManager as? GridLayoutManager == null) {
+                    rec.layoutManager = GridLayoutManager(requireContext(), 1, RecyclerView.VERTICAL, false)
+                }
+            }
+
+            when (visualization) {
+                MainActivity.Visualization.LIST -> {
+                    recycler?.let {
+                        (it.layoutManager as GridLayoutManager).spanCount = 1
+                        it.addItemDecoration(LinearSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_space)))
+                    }
+                }
+                MainActivity.Visualization.GRID -> {
+                    recycler?.let {
+                        (it.layoutManager as GridLayoutManager).spanCount = 2
+                        it.addItemDecoration(GridSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_space)))
+                    }
+                }
+            }
+            viewModel.adapter?.notifyDataSetChanged()
+        }
     }
 
     /**
@@ -158,7 +174,7 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
             }
 
             // Refresh the adapter.
-            adapter.notifyDataSetChanged()
+            viewModel.adapter?.notifyDataSetChanged()
 
             // Tells the recyclerView that the items are loaded,
             // to continue to use the loadMore functionality.
@@ -185,7 +201,7 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
             }
 
             // Refresh the adapter.
-            adapter.notifyDataSetChanged()
+            viewModel.adapter?.notifyDataSetChanged()
 
             // Tells the recyclerView that the items are refreshed.
             recycler?.refreshComplete()

@@ -35,7 +35,7 @@
         app:navGraph="@navigation/nav_graph" />
 
     <github.com.st235.lib_expandablebottombar.ExpandableBottomBar
-        android:id="@+id/expandable_bottom_bar"
+        android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
