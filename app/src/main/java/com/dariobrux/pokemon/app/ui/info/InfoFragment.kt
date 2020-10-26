@@ -1,5 +1,6 @@
 package com.dariobrux.pokemon.app.ui.info
 
+import android.animation.ValueAnimator
 import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -17,8 +18,11 @@ import com.dariobrux.pokemon.app.R
 import com.dariobrux.pokemon.app.other.extensions.changeAlpha
 import com.dariobrux.pokemon.app.other.extensions.getDominantColor
 import com.dariobrux.pokemon.app.data.models.Pokemon
+import com.dariobrux.pokemon.app.other.extensions.toColorDrawable
+import com.dariobrux.pokemon.app.other.extensions.toMainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.info_fragment.*
+import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
 import java.util.*
 
@@ -56,6 +60,8 @@ class InfoFragment : Fragment() {
 
         // Get the info of the pokemob.
         getPokemonData()
+
+
     }
 
     /**
@@ -81,12 +87,23 @@ class InfoFragment : Fragment() {
                     bitmap ?: return true
                     bitmap.getDominantColor(ContextCompat.getColor(requireContext(), R.color.white)) { color ->
                         card?.setCardBackgroundColor(color)
-                        containerRoot?.setBackgroundColor(color.changeAlpha(190))
+                        animateBackgroundColor(color.changeAlpha(190))
                     }
                     return false
                 }
 
             }).into(thumb)
         }
+    }
+
+    private fun animateBackgroundColor(toColor: Int) {
+        val startColor = requireActivity().toMainActivity()?.mainContainerRoot?.background?.toColorDrawable()?.color ?: return
+        val anim: ValueAnimator = ValueAnimator.ofArgb(startColor, toColor)
+        anim.duration = 200
+        anim.addUpdateListener {
+            val color = it.animatedValue as Int
+            containerRoot?.setBackgroundColor(color)
+        }
+        anim.start()
     }
 }

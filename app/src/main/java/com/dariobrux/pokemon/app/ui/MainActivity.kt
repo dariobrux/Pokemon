@@ -209,7 +209,7 @@ class MainActivity : AppCompatActivity() {
         toolbar?.setBackgroundColor(color.first)
         bottomBarVisualization?.setBackgroundColor(color.first)
         bottomBarSort?.setBackgroundColor(color.first)
-        containerRoot?.setBackgroundColor(color.second)
+        mainContainerRoot?.setBackgroundColor(color.second)
 
     }
 
