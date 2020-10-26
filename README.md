@@ -3,6 +3,14 @@
 Kotlin Coroutines + MVVM with Repository Pattern + Hilt + Room + Retrofit + DataStore + Navigation Component + Unit Test + Integration Test.
 
 
-This application uses the Pokémon API https://pokeapi.co/ to show a list of Pokémon and an easy info screen with very some information.
+This application uses the Pokémon API https://pokeapi.co/ to show a list of Pokémon and an easy info screen with some information like the height and the weight.
 
-I created a simple Pokèmon app for Android using the modern practice and technologies.
+As from subtitle, I created this simple app using the modern practice and technologies:
+Kotlin Coroutines
+MVVM + Repository Pattern
+Hilt
+Reftofit
+DataStore
+Navigation Component
+Unit Test
+Integration Test
