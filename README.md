@@ -3,7 +3,9 @@
 Kotlin Coroutines + MVVM with Repository Pattern + Hilt + Room + Retrofit + DataStore + Navigation Component + Unit Test + Integration Test.
 
 ->![alt text](https://media.pokemoncentral.it/wiki/thumb/5/53/Logo_Pok%C3%A9mon.png/600px-Logo_Pok%C3%A9mon.png?raw=true)<-
-
+<p align="center">
+  <img width="460" height="300" src="https://media.pokemoncentral.it/wiki/thumb/5/53/Logo_Pok%C3%A9mon.png/600px-Logo_Pok%C3%A9mon.png?raw=true">">
+</p>
 
 This application uses the Pokémon API https://pokeapi.co/ to show a list of Pokémon and a very minimal info screen containing some information about the pokémon, like the base experience, the height and the weight.
 
