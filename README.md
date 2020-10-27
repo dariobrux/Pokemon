@@ -18,20 +18,18 @@ This application uses the Pokémon API https://pokeapi.co/ to show a list of Pok
 ## What's in there
 
 As from subtitle, I created this simple app using the modern practice and technologies:
-* Kotlin Coroutines
-* MVVM + Repository Pattern
-* Hilt
-* Reftofit
-* DataStore
-* Navigation Component
+
+| Tool | README |
+| ------ | ------ |
+| Kotlin Coroutines | [plugins/dropbox/README.md][PlDb] |
+| MVVM + Repository Pattern | [plugins/github/README.md][PlGh] |
+| Hilt | [plugins/googledrive/README.md][PlGd] |
+| Reftofit | [plugins/onedrive/README.md][PlOd] |
+| DataStore | [plugins/medium/README.md][PlMe] |
+| Navigation Component | [plugins/googleanalytics/README.md][PlGa] |
+| Navigation Component | [plugins/googleanalytics/README.md][PlGa] |
+
+
 * Unit Test
 * Integration Test
 
-| Plugin | README |
-| ------ | ------ |
-| Dropbox | [plugins/dropbox/README.md][PlDb] |
-| GitHub | [plugins/github/README.md][PlGh] |
-| Google Drive | [plugins/googledrive/README.md][PlGd] |
-| OneDrive | [plugins/onedrive/README.md][PlOd] |
-| Medium | [plugins/medium/README.md][PlMe] |
-| Google Analytics | [plugins/googleanalytics/README.md][PlGa] |
