@@ -21,7 +21,7 @@ As from subtitle, I created this simple app using the modern practice and techno
 
 | Tool | README |
 | ------ | ------ |
-| Kotlin Coroutines | [https://developer.android.com/kotlin/coroutines][PlDb] |
+| Kotlin Coroutines | [https://developer.android.com/kotlin/coroutines] |
 | MVVM + Repository Pattern | [plugins/github/README.md][PlGh] |
 | Hilt | [plugins/googledrive/README.md][PlGd] |
 | Reftofit | [plugins/onedrive/README.md][PlOd] |
