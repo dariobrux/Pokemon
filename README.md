@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
-
 # All the modern Android practices for a super small Pokémon app.
 
 
@@ -15,6 +13,9 @@ This application uses the Pokémon API https://pokeapi.co/ to show a list of Pok
 |:----------:|:-------------:|:------:|
 | ![alt text](https://github.com/dariobrux/Pokemon/blob/main/others/photo_2020-10-26%2016.23.33.jpeg) |  ![alt text](https://github.com/dariobrux/Pokemon/blob/main/others/photo_2020-10-26%2016.23.42.jpeg) | ![alt text](https://github.com/dariobrux/Pokemon/blob/main/others/photo_2020-10-26%2016.23.48.jpeg) |
 | ![alt text](https://github.com/dariobrux/Pokemon/blob/main/others/photo_2020-10-26%2016.23.39.jpeg) |    ![alt text](https://github.com/dariobrux/Pokemon/blob/main/others/photo_2020-10-26%2016.23.44.jpeg)   |   ![alt text](https://github.com/dariobrux/Pokemon/blob/main/others/photo_2020-10-26%2016.23.50.jpeg) |
+
+
+### What's in there
 
 As from subtitle, I created this simple app using the modern practice and technologies:
 * Kotlin Coroutines
