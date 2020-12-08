@@ -17,7 +17,7 @@ import com.dariobrux.pokemon.app.data.models.PokemonData
  */
 
 @Dao
-interface PokemonDao {
+interface PokemonDAO {
 
     /**
      * Get the list of all the pokemon stored.

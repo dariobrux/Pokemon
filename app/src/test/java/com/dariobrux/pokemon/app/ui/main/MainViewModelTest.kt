@@ -3,7 +3,7 @@ package com.dariobrux.pokemon.app.ui.main
 import androidx.lifecycle.MutableLiveData
 import com.dariobrux.pokemon.app.data.models.DataInfo
 import com.dariobrux.pokemon.app.data.models.Pokemon
-import com.dariobrux.pokemon.app.other.Resource
+import com.dariobrux.pokemon.app.common.Resource
 import junit.framework.TestCase
 import org.junit.Test
 import org.mockito.Mock

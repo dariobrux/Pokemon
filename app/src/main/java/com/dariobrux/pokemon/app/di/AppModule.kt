@@ -3,13 +3,13 @@ package com.dariobrux.pokemon.app.di
 import android.content.Context
 import androidx.datastore.preferences.createDataStore
 import com.dariobrux.pokemon.app.BuildConfig
-import com.dariobrux.pokemon.app.data.local.PokemonDao
+import com.dariobrux.pokemon.app.data.local.PokemonDAO
 import com.dariobrux.pokemon.app.data.local.PokemonDatabase
 import com.dariobrux.pokemon.app.data.remote.PokemonApiHelper
 import com.dariobrux.pokemon.app.data.remote.PokemonDataApiHelper
 import com.dariobrux.pokemon.app.data.remote.PokemonDataService
 import com.dariobrux.pokemon.app.data.remote.PokemonService
-import com.dariobrux.pokemon.app.other.Constants
+import com.dariobrux.pokemon.app.common.Constants
 import com.dariobrux.pokemon.app.ui.info.InfoRepository
 import com.dariobrux.pokemon.app.ui.main.MainRepository
 import dagger.Module
@@ -89,9 +89,9 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideMainRepository(pokemonApiHelper: PokemonApiHelper, dao: PokemonDao) = MainRepository(pokemonApiHelper, dao)
+    fun provideMainRepository(pokemonApiHelper: PokemonApiHelper, dao: PokemonDAO) = MainRepository(pokemonApiHelper, dao)
 
     @Singleton
     @Provides
-    fun provideInfoRepository(pokemonDataApiHelper: PokemonDataApiHelper, dao: PokemonDao) = InfoRepository(pokemonDataApiHelper, dao)
+    fun provideInfoRepository(pokemonDataApiHelper: PokemonDataApiHelper, dao: PokemonDAO) = InfoRepository(pokemonDataApiHelper, dao)
 }

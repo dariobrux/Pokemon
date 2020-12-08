@@ -9,4 +9,7 @@
     <string name="switch_theme">Switch Theme</string>
     <string name="list">List</string>
     <string name="grid">Grid</string>
+    <string name="image_pokemon">Pokemon image</string>
+    <string name="base_stats">Base Stats</string>
+    <string name="pikachu">Pikachu</string>
 </resources>

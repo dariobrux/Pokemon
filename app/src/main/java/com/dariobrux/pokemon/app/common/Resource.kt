@@ -1,4 +1,4 @@
-package com.dariobrux.pokemon.app.other
+package com.dariobrux.pokemon.app.common
 
 /**
  *

@@ -1,6 +1,6 @@
 package com.dariobrux.pokemon.app.data.remote
 
-import com.dariobrux.pokemon.app.other.Resource
+import com.dariobrux.pokemon.app.common.Resource
 import retrofit2.Response
 
 /**

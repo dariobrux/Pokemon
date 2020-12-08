@@ -1,4 +1,4 @@
-package com.dariobrux.pokemon.app.other.extensions
+package com.dariobrux.pokemon.app.common.extensions
 
 import androidx.datastore.DataStore
 import androidx.datastore.preferences.Preferences

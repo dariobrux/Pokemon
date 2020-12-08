@@ -3,10 +3,10 @@ package com.dariobrux.pokemon.app.ui.info
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.dariobrux.pokemon.app.data.remote.PokemonDataApiHelper
-import com.dariobrux.pokemon.app.data.local.PokemonDao
+import com.dariobrux.pokemon.app.data.local.PokemonDAO
 import com.dariobrux.pokemon.app.data.models.DataInfo
 import com.dariobrux.pokemon.app.data.models.PokemonData
-import com.dariobrux.pokemon.app.other.Resource
+import com.dariobrux.pokemon.app.common.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +22,7 @@ import javax.inject.Inject
  * between the restful api and the database.
  *
  */
-class InfoRepository @Inject constructor(private val pokemonDataApiHelper: PokemonDataApiHelper, private val pokemonDao: PokemonDao) {
+class InfoRepository @Inject constructor(private val pokemonDataApiHelper: PokemonDataApiHelper, private val pokemonDAO: PokemonDAO) {
 
     /**
      * Get the list of the pokemon from a restful api or from the database.
@@ -41,7 +41,7 @@ class InfoRepository @Inject constructor(private val pokemonDataApiHelper: Pokem
             var pokemonData: PokemonData? = null
 
             // Read first the local pokemon list from database.
-            val localPokemon = pokemonDao.getPokemonData(name)
+            val localPokemon = pokemonDAO.getPokemonData(name)
 
             // If it is not empty, read and pass the data retrieved from database.
             if (localPokemon != null) {
@@ -65,7 +65,7 @@ class InfoRepository @Inject constructor(private val pokemonDataApiHelper: Pokem
                     // Store in the database.
                     pokemonData?.let { data ->
                         Timber.d("Insert the pokemon in the database.")
-                        pokemonDao.insertPokemonData(data)
+                        pokemonDAO.insertPokemonData(data)
                     }
                 }.onFailure {
                     Timber.w("Problems while retrieve the pokemon list.")

@@ -2,14 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="gray">#999999</color>
-
-    <color name="primary">@color/day</color>
-
-    <color name="day">#EF5350</color>
-    <color name="dark">#581845</color>
-
     <color name="red_400">#ef5350</color>
     <color name="blue_gray_900">#263238</color>
+    <color name="black_alpha_50">#80000000</color>
+    <color name="black_alpha_70">#b3000000</color>
+    <color name="grey_300">#e0e0e0</color>
 
 </resources>

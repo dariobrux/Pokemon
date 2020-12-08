@@ -2,13 +2,12 @@ package com.dariobrux.pokemon.app.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.dariobrux.pokemon.app.R
 import com.dariobrux.pokemon.app.data.remote.PokemonApiHelper
-import com.dariobrux.pokemon.app.data.local.PokemonDao
+import com.dariobrux.pokemon.app.data.local.PokemonDAO
 import com.dariobrux.pokemon.app.data.models.DataInfo
-import com.dariobrux.pokemon.app.other.Constants
-import com.dariobrux.pokemon.app.other.Resource
-import com.dariobrux.pokemon.app.other.extensions.getIdFromUrl
+import com.dariobrux.pokemon.app.common.Constants
+import com.dariobrux.pokemon.app.common.Resource
+import com.dariobrux.pokemon.app.common.extensions.getIdFromUrl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,7 +23,7 @@ import javax.inject.Inject
  * between the restful api and the database.
  *
  */
-class MainRepository @Inject constructor(private val pokemonApiHelper: PokemonApiHelper, private val pokemonDao: PokemonDao) {
+class MainRepository @Inject constructor(private val pokemonApiHelper: PokemonApiHelper, private val pokemonDAO: PokemonDAO) {
 
     /**
      * Increment it to display the next set of items.
@@ -60,7 +59,7 @@ class MainRepository @Inject constructor(private val pokemonApiHelper: PokemonAp
             var dataInfo: DataInfo? = null
 
             // Read first the local pokemon list from database.
-            val localPokemonList = pokemonDao.getPokemonList(offset, limit)
+            val localPokemonList = pokemonDAO.getPokemonList(offset, limit)
 
             // If it is not empty, read and pass the data retrieved from database.
             if (!localPokemonList.isNullOrEmpty()) {
@@ -90,7 +89,7 @@ class MainRepository @Inject constructor(private val pokemonApiHelper: PokemonAp
                             pokemon.urlPicture = String.format(Constants.BASE_PICTURE_URL, pokemon.num)
                         }
                         Timber.d("Insert the pokemon list in the database.")
-                        pokemonDao.insertPokemonList(pokemonList)
+                        pokemonDAO.insertPokemonList(pokemonList)
                     }
                 }.onFailure {
                     Timber.w("Problems while retrieve the pokemon list.")

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dariobrux.pokemon.app.R
 import com.dariobrux.pokemon.app.data.models.Pokemon
 import com.dariobrux.pokemon.app.databinding.FragmentMainBinding
-import com.dariobrux.pokemon.app.ui.utils.GridSpaceItemDecoration
+import com.dariobrux.pokemon.app.ui.util.GridSpaceItemDecoration
 import com.jcodecraeer.xrecyclerview.ProgressStyle
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,9 +56,9 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         // Set the RecyclerView with its LayoutManager, ItemDecorator, Adapter and callbacks.
-        binding?.recycler?.let {
+        binding?.mainRecycler?.let {
             it.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
-            it.addItemDecoration(GridSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_space)))
+            it.addItemDecoration(GridSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_padding)))
             it.setLoadingMoreProgressStyle(ProgressStyle.Pacman)
             it.adapter = viewModel.adapter
             it.setLoadingListener(this)
@@ -91,7 +91,7 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
 
             // Tells the recyclerView that the items are loaded,
             // to continue to use the loadMore functionality.
-            binding?.recycler?.loadMoreComplete()
+            binding?.mainRecycler?.loadMoreComplete()
         }
     }
 
@@ -110,7 +110,7 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
             viewModel.adapter?.notifyDataSetChanged()
 
             // Tells the recyclerView that the items are refreshed.
-            binding?.recycler?.refreshComplete()
+            binding?.mainRecycler?.refreshComplete()
         }
     }
 

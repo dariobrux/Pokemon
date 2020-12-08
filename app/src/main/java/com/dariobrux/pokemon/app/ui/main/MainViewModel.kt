@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.dariobrux.pokemon.app.data.models.DataInfo
 import com.dariobrux.pokemon.app.data.models.Pokemon
-import com.dariobrux.pokemon.app.other.Resource
+import com.dariobrux.pokemon.app.common.Resource
 
 /**
  *

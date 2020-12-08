@@ -1,7 +1,6 @@
-package com.dariobrux.pokemon.app.other.extensions
+package com.dariobrux.pokemon.app.common.extensions
 
 import android.app.Activity
-import android.content.res.Resources
 import com.dariobrux.pokemon.app.ui.MainActivity
 
 /**

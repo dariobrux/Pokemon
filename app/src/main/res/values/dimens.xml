@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="regular_card_height">256dp</dimen>
-    <dimen name="regular_radius">16dp</dimen>
-    <dimen name="regular_space">8dp</dimen>
-    <dimen name="regular_height">200dp</dimen>
-    <dimen name="regular_margin_top">48dp</dimen>
+    <dimen name="regular_card_height">200dp</dimen>
+    <dimen name="regular_corner_radius">16dp</dimen>
+    <dimen name="regular_padding">20dp</dimen>
+    <dimen name="regular_type_circle_size">36dp</dimen>
+    <dimen name="regular_type_size">16dp</dimen>
+    <dimen name="regular_stats_bar_height">24dp</dimen>
+    <dimen name="regular_progress_height">100dp</dimen>
+    <dimen name="medium_padding">40dp</dimen>
+    <dimen name="small_padding">10dp</dimen>
 </resources>
