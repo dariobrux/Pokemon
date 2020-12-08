@@ -1,5 +1,6 @@
 package com.dariobrux.pokemon.app.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dariobrux.pokemon.app.R
-import com.dariobrux.pokemon.app.data.models.Pokemon
+import com.dariobrux.pokemon.app.common.Resource
+import com.dariobrux.pokemon.app.data.local.model.PokemonEntity
 import com.dariobrux.pokemon.app.databinding.FragmentMainBinding
 import com.dariobrux.pokemon.app.ui.util.GridSpaceItemDecoration
 import com.jcodecraeer.xrecyclerview.ProgressStyle
@@ -37,15 +39,18 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
     private var binding: FragmentMainBinding? = null
 
     /**
+     * The Adapter to show the items in list.
+     */
+    private var adapter: MainAdapter? = null
+
+    /**
      * The ViewModel
      */
     private val viewModel: MainViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (viewModel.adapter == null) {
-            viewModel.adapter = MainAdapter(requireContext(), viewModel.pokemonList, this)
-        }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        adapter = MainAdapter(requireContext(), mutableListOf(), this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -55,22 +60,15 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        // Set the RecyclerView with its LayoutManager, ItemDecorator, Adapter and callbacks.
         binding?.mainRecycler?.let {
             it.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
             it.addItemDecoration(GridSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_padding)))
             it.setLoadingMoreProgressStyle(ProgressStyle.Pacman)
-            it.adapter = viewModel.adapter
+            it.adapter = adapter
             it.setLoadingListener(this)
         }
 
-        // At this point, I must observe the ViewModel to get the updated list
-        // of pokemon only if the current list is empty. I let do in this way
-        // because, when I change the theme, the application is refreshed, and
-        // I could incur in any bug.
-        if (viewModel.pokemonList.isEmpty()) {
-            getPokemonList()
-        }
+        getPokemonList()
     }
 
     override fun onDestroy() {
@@ -82,12 +80,18 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
      * Observe the ViewModel to get the list of the pokemon to show.
      */
     private fun getPokemonList() {
-        viewModel.getPokemon()?.observe(this.viewLifecycleOwner) {
-            Timber.d("Observer the dataInfo object. It contains ${it.data?.pokemonList?.size ?: 0} pokemon")
-            viewModel.pokemonList.addAll(it.data?.pokemonList ?: emptyList())
+        viewModel.getPokemonList().observe(this.viewLifecycleOwner) {
 
-            // Refresh the adapter.
-            viewModel.adapter?.notifyDataSetChanged()
+            if (it.status == Resource.Status.SUCCESS) {
+
+                val pokemonList = it.data ?: listOf()
+                Timber.d("Observer the dataInfo object. It contains ${pokemonList.size} pokemon")
+
+                adapter?.let { adapter ->
+                    adapter.items.addAll(pokemonList)
+                    adapter.notifyDataSetChanged()
+                }
+            }
 
             // Tells the recyclerView that the items are loaded,
             // to continue to use the loadMore functionality.
@@ -99,19 +103,19 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
      * Refresh the screen, reloading the pokemon list from the first value
      */
     private fun refreshPokemonList() {
-        viewModel.refreshPokemon()?.observe(this.viewLifecycleOwner) {
-            Timber.d("Refresh the pokemon list. Displayed ${it.data?.pokemonList ?: 0} pokemon.")
-
-            // Clear the list and reinsert everything retrieved from the ViewModel.
-            viewModel.pokemonList.clear()
-            viewModel.pokemonList.addAll(it.data?.pokemonList ?: emptyList())
-
-            // Refresh the adapter.
-            viewModel.adapter?.notifyDataSetChanged()
-
-            // Tells the recyclerView that the items are refreshed.
-            binding?.mainRecycler?.refreshComplete()
-        }
+//        viewModel.refreshPokemon()?.observe(this.viewLifecycleOwner) {
+//            Timber.d("Refresh the pokemon list. Displayed ${it.data?.pokemonList ?: 0} pokemon.")
+//
+//            // Clear the list and reinsert everything retrieved from the ViewModel.
+//            viewModel.pokemonList.clear()
+//            viewModel.pokemonList.addAll(it.data?.pokemonList ?: emptyList())
+//
+//            // Refresh the adapter.
+//            viewModel.adapter?.notifyDataSetChanged()
+//
+//            // Tells the recyclerView that the items are refreshed.
+//            binding?.mainRecycler?.refreshComplete()
+//        }
     }
 
     /**
@@ -119,7 +123,7 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
      * It opens the screen with all the info.
      * @param pokemon the pokemon tapped.
      */
-    override fun onPokemonSelected(pokemon: Pokemon) {
+    override fun onPokemonSelected(pokemon: PokemonEntity) {
         NavHostFragment.findNavController(this).navigate(R.id.action_mainFragment_to_infoFragment, Bundle().apply {
             putSerializable("pokemon", pokemon)
         })

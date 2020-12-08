@@ -4,8 +4,14 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.dariobrux.pokemon.app.data.models.Pokemon
-import com.dariobrux.pokemon.app.data.models.PokemonData
+import androidx.room.TypeConverters
+import com.dariobrux.pokemon.app.data.local.converter.ImageConverter
+import com.dariobrux.pokemon.app.data.local.converter.StatsConverter
+import com.dariobrux.pokemon.app.data.local.converter.TypeConverter
+import com.dariobrux.pokemon.app.data.local.model.ImageEntity
+import com.dariobrux.pokemon.app.data.local.model.PokemonEntity
+import com.dariobrux.pokemon.app.data.local.model.StatsEntity
+import com.dariobrux.pokemon.app.data.local.model.TypeEntity
 
 /**
  *
@@ -16,10 +22,18 @@ import com.dariobrux.pokemon.app.data.models.PokemonData
  */
 
 @Database(
-    exportSchema = false, version = 1, entities = [
-        Pokemon::class,
-        PokemonData::class
-    ]
+    entities = [
+        PokemonEntity::class,
+        StatsEntity::class,
+        TypeEntity::class,
+        ImageEntity::class
+    ],
+    version = 1
+)
+@TypeConverters(
+    TypeConverter::class,
+    StatsConverter::class,
+    ImageConverter::class
 )
 abstract class PokemonDatabase : RoomDatabase() {
 

@@ -31,14 +31,14 @@ class MainViewModelTest : TestCase() {
 
     @Test
     fun testGetExistingData() {
-        Mockito.`when`(repository.getPokemon()).thenReturn(MutableLiveData())
-        assertTrue(viewModel.getPokemon() != null)
+        Mockito.`when`(repository.getPokemonList()).thenReturn(MutableLiveData())
+        assertTrue(viewModel.getPokemonList() != null)
     }
 
     @Test
     fun testGetNotExistingData() {
-        Mockito.`when`(repository.getPokemon()).thenReturn(null)
-        assertTrue(viewModel.getPokemon() == null)
+        Mockito.`when`(repository.getPokemonList()).thenReturn(null)
+        assertTrue(viewModel.getPokemonList() == null)
     }
 
     @Test
@@ -48,7 +48,7 @@ class MainViewModelTest : TestCase() {
         }
         val resource = Resource(Resource.Status.SUCCESS, dataInfo, null)
         val liveData = MutableLiveData(resource)
-        Mockito.`when`(repository.getPokemon()).thenReturn(liveData)
+        Mockito.`when`(repository.getPokemonList()).thenReturn(liveData)
         val result = viewModel.refreshPokemon()
         assertTrue(result?.value?.data?.pokemonList?.size == 20)
     }

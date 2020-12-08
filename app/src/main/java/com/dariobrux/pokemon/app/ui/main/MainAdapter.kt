@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dariobrux.pokemon.app.common.extensions.changeAlpha
 import com.dariobrux.pokemon.app.common.extensions.loadImage
-import com.dariobrux.pokemon.app.data.models.Pokemon
+import com.dariobrux.pokemon.app.data.local.model.PokemonEntity
 import com.dariobrux.pokemon.app.databinding.ItemPokemonBinding
 import java.util.*
 
@@ -17,10 +17,10 @@ import java.util.*
  * This is the adapter applied to the RecyclerView in the MainFragment.
  *
  */
-class MainAdapter(private val context: Context, private val items: List<Pokemon>, private val listener: OnPokemonSelectedListener?) : RecyclerView.Adapter<MainAdapter.PokemonViewHolder>() {
+class MainAdapter(private val context: Context, var items: MutableList<PokemonEntity>, private val listener: OnPokemonSelectedListener?) : RecyclerView.Adapter<MainAdapter.PokemonViewHolder>() {
 
     interface OnPokemonSelectedListener {
-        fun onPokemonSelected(pokemon: Pokemon)
+        fun onPokemonSelected(pokemon: PokemonEntity)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonViewHolder {
@@ -37,12 +37,12 @@ class MainAdapter(private val context: Context, private val items: List<Pokemon>
     }
 
     inner class PokemonViewHolder(private val binding: ItemPokemonBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Pokemon) = with(binding) {
+        fun bind(item: PokemonEntity) = with(binding) {
             card.animate().scaleX(1f).scaleY(1f).setDuration(200).start()
             txt.text = item.name.capitalize(Locale.getDefault())
-//            img.loadImage(context, item.images.first().url) {
-//                card.setCardBackgroundColor(it.changeAlpha(220))
-//            }
+            img.loadImage(context, item.images.first().url) {
+                card.setCardBackgroundColor(it.changeAlpha(220))
+            }
             card.setOnClickListener {
                 listener?.onPokemonSelected(item)
             }

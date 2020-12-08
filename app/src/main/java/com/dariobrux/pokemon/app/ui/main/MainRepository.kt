@@ -1,17 +1,12 @@
 package com.dariobrux.pokemon.app.ui.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.dariobrux.pokemon.app.data.remote.PokemonApiHelper
-import com.dariobrux.pokemon.app.data.local.PokemonDAO
-import com.dariobrux.pokemon.app.data.models.DataInfo
-import com.dariobrux.pokemon.app.common.Constants
+import androidx.lifecycle.liveData
 import com.dariobrux.pokemon.app.common.Resource
-import com.dariobrux.pokemon.app.common.extensions.getIdFromUrl
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.dariobrux.pokemon.app.common.extensions.toPokemonEntity
+import com.dariobrux.pokemon.app.common.extensions.toPokemonEntityList
+import com.dariobrux.pokemon.app.data.local.PokemonDAO
+import com.dariobrux.pokemon.app.data.local.model.PokemonEntity
+import com.dariobrux.pokemon.app.data.remote.PokemonApiHelper
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -23,7 +18,7 @@ import javax.inject.Inject
  * between the restful api and the database.
  *
  */
-class MainRepository @Inject constructor(private val pokemonApiHelper: PokemonApiHelper, private val pokemonDAO: PokemonDAO) {
+class MainRepository @Inject constructor(private val api: PokemonApiHelper, private val dao: PokemonDAO) {
 
     /**
      * Increment it to display the next set of items.
@@ -33,7 +28,7 @@ class MainRepository @Inject constructor(private val pokemonApiHelper: PokemonAp
     /**
      * Max number of items to download in once.
      */
-    private var limit = 100
+    private var limit = 20
 
     /**
      * Reset the offset to start from the first pokemon.
@@ -42,69 +37,61 @@ class MainRepository @Inject constructor(private val pokemonApiHelper: PokemonAp
         offset = 0
     }
 
-    /**
-     * Get the list of the pokemon from a restful api or from the database.
-     * Read first the local pokemon list from db. If this list is not empty,
-     * notify that some pokemon are available.
-     * If the local list is empty, download the pokemon from the api. Then,
-     * store this list in the database.
-     * @return the [DataInfo] object mapped into a [Resource], inside a [LiveData].
-     */
-    fun getPokemon(): LiveData<Resource<DataInfo>> {
-        val mutableLiveData: MutableLiveData<Resource<DataInfo>> = MutableLiveData()
+    fun getPokemonList() = liveData {
 
-        // This runs into a Coroutine Scope
-        CoroutineScope(Dispatchers.IO).launch {
+        Timber.tag(TAG).d("Retrieve Pokemon from offset $offset to ${offset + limit}")
 
-            var dataInfo: DataInfo? = null
+        emit(Resource.loading(null))
 
-            // Read first the local pokemon list from database.
-            val localPokemonList = pokemonDAO.getPokemonList(offset, limit)
+        var pokemonEntityList: MutableList<PokemonEntity> = mutableListOf()
 
-            // If it is not empty, read and pass the data retrieved from database.
-            if (!localPokemonList.isNullOrEmpty()) {
-                Timber.d("Read the pokemon list from the database.")
-                dataInfo = DataInfo().apply {
-                    pokemonList = localPokemonList
-                }
-            } else {
+        kotlin.runCatching {
+            dao.getPokemonList(offset, limit)
+        }.onSuccess { pokemonList ->
 
-                Timber.d("Trying to retrieve the pokemon list from url.")
-
-                // If the database is empty, download the pokemon from the online API and
-                // store them in the database.
-                kotlin.runCatching {
-                    pokemonApiHelper.getPokemon(offset, limit)
-                }.onSuccess {
-                    dataInfo = if (it.status == Resource.Status.SUCCESS) {
-                        it.data
-                    } else {
-                        null
-                    }
-
-                    // Store in the database.
-                    dataInfo?.pokemonList?.let { pokemonList ->
-                        pokemonList.forEach { pokemon ->
-                            pokemon.num = pokemon.url?.getIdFromUrl() ?: -1
-                            pokemon.urlPicture = String.format(Constants.BASE_PICTURE_URL, pokemon.num)
-                        }
-                        Timber.d("Insert the pokemon list in the database.")
-                        pokemonDAO.insertPokemonList(pokemonList)
-                    }
-                }.onFailure {
-                    Timber.w("Problems while retrieve the pokemon list.")
-                }
-            }
-
-            // Finish Coroutine and pass on the Main Thread
-            withContext(Dispatchers.Main) {
-                mutableLiveData.value = Resource(Resource.Status.SUCCESS, dataInfo, null)
-                dataInfo?.also {
-                    offset += limit
-                }
+            pokemonList?.let {
+                pokemonEntityList.addAll(it)
             }
         }
 
-        return mutableLiveData
+        if (!pokemonEntityList.isNullOrEmpty()) {
+            Timber.tag(TAG).d("Pokemon retrieved from Database.")
+            emit(Resource.success(pokemonEntityList))
+        } else {
+
+            kotlin.runCatching {
+                val resource = api.getPokemonList(offset, limit)
+                val rootData = resource.data
+
+                if (resource.status == Resource.Status.SUCCESS && rootData != null) {
+                    pokemonEntityList = resource.data.results!!.toPokemonEntityList().toMutableList()
+
+                    rootData.results?.forEachIndexed { index, value ->
+                        value.url?.run {
+                            api.getPokemonInfo(this)
+                        }?.let {
+
+                            it.data?.toPokemonEntity()?.let { pokemonEntity ->
+                                pokemonEntityList[index] = pokemonEntity
+                                Timber.tag(TAG).d("Storing ${pokemonEntity.name}...")
+
+                                dao.insertPokemon(pokemonEntity)
+                            }
+                        }
+                    }
+                    Timber.tag(TAG).d("Pokemon retrieved from Database.")
+                }
+            }.onFailure {
+                Timber.tag(TAG).d("Pokemon retrieved from Database.")
+            }
+        }
+
+        offset += 20
+
+        emit(Resource.success(pokemonEntityList))
+    }
+
+    companion object {
+        private const val TAG = "PokemonDataSource"
     }
 }

@@ -39,7 +39,7 @@ android {
     testOptions {
         unitTests.returnDefaultValues = false
     }
-    
+
     buildFeatures {
         viewBinding true
     }
@@ -98,6 +98,13 @@ dependencies {
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02"
     kapt "androidx.hilt:hilt-compiler:1.0.0-alpha02"
 
+    // Networking
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofitCoroutines_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+
     // Navigation Component
     // https://developer.android.com/guide/navigation/navigation-getting-started
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
@@ -111,17 +118,12 @@ dependencies {
     // Testing Navigation
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 
-    // Retrofit
-    // https://square.github.io/retrofit/
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
-
     // Room
-    // https://medium.com/mindorks/using-room-database-android-jetpack-675a89a0e942
     implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    testImplementation "androidx.room:room-testing:$room_version"
 
     // Rx
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'

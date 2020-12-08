@@ -3,14 +3,11 @@ package com.dariobrux.pokemon.app.di
 import android.content.Context
 import androidx.datastore.preferences.createDataStore
 import com.dariobrux.pokemon.app.BuildConfig
+import com.dariobrux.pokemon.app.common.Constants
 import com.dariobrux.pokemon.app.data.local.PokemonDAO
 import com.dariobrux.pokemon.app.data.local.PokemonDatabase
 import com.dariobrux.pokemon.app.data.remote.PokemonApiHelper
-import com.dariobrux.pokemon.app.data.remote.PokemonDataApiHelper
-import com.dariobrux.pokemon.app.data.remote.PokemonDataService
 import com.dariobrux.pokemon.app.data.remote.PokemonService
-import com.dariobrux.pokemon.app.common.Constants
-import com.dariobrux.pokemon.app.ui.info.InfoRepository
 import com.dariobrux.pokemon.app.ui.main.MainRepository
 import dagger.Module
 import dagger.Provides
@@ -20,7 +17,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 /**
@@ -58,7 +55,7 @@ object AppModule {
     @Singleton
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient, baseUrl: String): Retrofit = Retrofit.Builder()
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(MoshiConverterFactory.create())
         .baseUrl(baseUrl)
         .client(okHttpClient)
         .build()
@@ -69,15 +66,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePokemonDataService(retrofit: Retrofit): PokemonDataService = retrofit.create(PokemonDataService::class.java)
-
-    @Provides
-    @Singleton
     fun providePokemonApiHelper(pokemonService: PokemonService) = PokemonApiHelper(pokemonService)
-
-    @Provides
-    @Singleton
-    fun providePokemonDataApiHelper(pokemonDataService: PokemonDataService) = PokemonDataApiHelper(pokemonDataService)
 
     @Singleton
     @Provides
@@ -90,8 +79,4 @@ object AppModule {
     @Singleton
     @Provides
     fun provideMainRepository(pokemonApiHelper: PokemonApiHelper, dao: PokemonDAO) = MainRepository(pokemonApiHelper, dao)
-
-    @Singleton
-    @Provides
-    fun provideInfoRepository(pokemonDataApiHelper: PokemonDataApiHelper, dao: PokemonDAO) = InfoRepository(pokemonDataApiHelper, dao)
 }
