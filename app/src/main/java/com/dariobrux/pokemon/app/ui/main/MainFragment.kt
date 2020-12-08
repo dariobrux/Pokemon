@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dariobrux.pokemon.app.R
 import com.dariobrux.pokemon.app.common.Resource
-import com.dariobrux.pokemon.app.common.extensions.toGone
-import com.dariobrux.pokemon.app.common.extensions.toVisible
+import com.dariobrux.pokemon.app.common.extension.toGone
+import com.dariobrux.pokemon.app.common.extension.toVisible
 import com.dariobrux.pokemon.app.data.local.model.PokemonEntity
 import com.dariobrux.pokemon.app.databinding.FragmentMainBinding
 import com.dariobrux.pokemon.app.ui.util.PokemonSpaceItemDecoration
@@ -97,13 +97,13 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
                         adapter.items.addAll(pokemonList)
                         adapter.notifyDataSetChanged()
                     }
+
+                    hideLoading()
                 }
                 else -> {
                     // Do nothing
                 }
             }
-
-            hideLoading()
 
             // Tells the recyclerView that the items are loaded,
             // to continue to use the loadMore functionality.

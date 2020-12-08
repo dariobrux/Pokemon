@@ -1,4 +1,4 @@
-package com.dariobrux.pokemon.app.common.extensions
+package com.dariobrux.pokemon.app.common.extension
 
 import junit.framework.TestCase
 import org.junit.Test

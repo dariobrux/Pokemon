@@ -2,8 +2,8 @@ package com.dariobrux.pokemon.app.ui.main
 
 import androidx.lifecycle.liveData
 import com.dariobrux.pokemon.app.common.Resource
-import com.dariobrux.pokemon.app.common.extensions.toPokemonEntity
-import com.dariobrux.pokemon.app.common.extensions.toPokemonEntityList
+import com.dariobrux.pokemon.app.common.extension.toPokemonEntity
+import com.dariobrux.pokemon.app.common.extension.toPokemonEntityList
 import com.dariobrux.pokemon.app.data.local.PokemonDAO
 import com.dariobrux.pokemon.app.data.local.model.PokemonEntity
 import com.dariobrux.pokemon.app.data.remote.PokemonApiHelper
@@ -56,7 +56,6 @@ class MainRepository @Inject constructor(private val api: PokemonApiHelper, priv
 
         if (!pokemonEntityList.isNullOrEmpty()) {
             Timber.tag(TAG).d("Pokemon retrieved from Database.")
-            emit(Resource.success(pokemonEntityList))
         } else {
 
             kotlin.runCatching {

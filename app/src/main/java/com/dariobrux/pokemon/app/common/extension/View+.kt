@@ -1,4 +1,4 @@
-package com.dariobrux.pokemon.app.common.extensions
+package com.dariobrux.pokemon.app.common.extension
 
 import android.animation.ValueAnimator
 import android.view.View

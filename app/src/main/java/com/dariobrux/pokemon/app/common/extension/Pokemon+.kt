@@ -1,4 +1,4 @@
-package com.dariobrux.pokemon.app.common.extensions
+package com.dariobrux.pokemon.app.common.extension
 
 import com.dariobrux.pokemon.app.data.local.model.ImageEntity
 import com.dariobrux.pokemon.app.data.local.model.PokemonEntity

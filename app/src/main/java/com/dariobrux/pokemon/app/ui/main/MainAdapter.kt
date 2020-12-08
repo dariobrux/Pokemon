@@ -4,8 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.dariobrux.pokemon.app.common.extensions.changeAlpha
-import com.dariobrux.pokemon.app.common.extensions.loadImage
+import com.dariobrux.pokemon.app.common.extension.loadImage
+import com.dariobrux.pokemon.app.common.manager.ColorManager
 import com.dariobrux.pokemon.app.data.local.model.PokemonEntity
 import com.dariobrux.pokemon.app.databinding.ItemPokemonBinding
 import java.util.*
@@ -40,7 +40,7 @@ class MainAdapter(private val context: Context, var items: MutableList<PokemonEn
         fun bind(item: PokemonEntity) = with(binding) {
             txt.text = item.name.capitalize(Locale.getDefault())
             img.loadImage(context, item.images.first().url) {
-                card.setCardBackgroundColor(it.changeAlpha(220))
+                card.setCardBackgroundColor(ColorManager.changeAlpha(it, 220))
             }
             card.setOnClickListener {
                 listener?.onPokemonSelected(item)

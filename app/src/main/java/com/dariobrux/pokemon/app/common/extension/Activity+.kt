@@ -1,4 +1,4 @@
-package com.dariobrux.pokemon.app.common.extensions
+package com.dariobrux.pokemon.app.common.extension
 
 import android.app.Activity
 import com.dariobrux.pokemon.app.ui.MainActivity
