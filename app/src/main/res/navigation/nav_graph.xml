@@ -24,9 +24,8 @@
             app:destination="@id/infoFragment" />
     </fragment>
 
-    <fragment
+    <dialog
         android:id="@+id/infoFragment"
         android:name="com.dariobrux.pokemon.app.ui.info.InfoFragment"
-        android:label="info_fragment"
-        tools:layout="@layout/fragment_info" />
+        android:label="InfoFragment" />
 </navigation>

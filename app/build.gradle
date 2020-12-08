@@ -125,6 +125,9 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
 
+    // RoundCornerProgressBar
+    implementation 'com.akexorcist:round-corner-progress-bar:2.1.1'
+
     // Rx
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
