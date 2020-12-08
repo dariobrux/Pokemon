@@ -9,20 +9,14 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.dariobrux.pokemon.app.R
 import com.dariobrux.pokemon.app.data.models.Pokemon
-import com.dariobrux.pokemon.app.other.extensions.getIdFromUrl
-import com.dariobrux.pokemon.app.other.extensions.toMainActivity
-import com.dariobrux.pokemon.app.ui.MainActivity
+import com.dariobrux.pokemon.app.databinding.FragmentMainBinding
 import com.dariobrux.pokemon.app.ui.utils.GridSpaceItemDecoration
-import com.dariobrux.pokemon.app.ui.utils.LinearSpaceItemDecoration
 import com.jcodecraeer.xrecyclerview.ProgressStyle
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.main_fragment.*
 import timber.log.Timber
-
 
 /**
  *
@@ -40,6 +34,8 @@ import timber.log.Timber
 @AndroidEntryPoint
 class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPokemonSelectedListener {
 
+    private var binding: FragmentMainBinding? = null
+
     /**
      * The ViewModel
      */
@@ -53,13 +49,16 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.main_fragment, container, false)
+        binding = FragmentMainBinding.inflate(inflater, container, false)
+        return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         // Set the RecyclerView with its LayoutManager, ItemDecorator, Adapter and callbacks.
-        recycler?.let {
+        binding?.recycler?.let {
+            it.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
+            it.addItemDecoration(GridSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_space)))
             it.setLoadingMoreProgressStyle(ProgressStyle.Pacman)
             it.adapter = viewModel.adapter
             it.setLoadingListener(this)
@@ -71,65 +70,6 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
         // I could incur in any bug.
         if (viewModel.pokemonList.isEmpty()) {
             getPokemonList()
-        }
-
-        // Observe the sort mode to refresh the list and the sort button.
-        requireActivity().toMainActivity()?.sorting?.observe(this.viewLifecycleOwner) { sorting ->
-            sorting ?: return@observe
-            when (sorting) {
-                MainActivity.Sorting.AZ -> {
-                    sortByName()
-                }
-                MainActivity.Sorting.NUM -> {
-                    sortById()
-                }
-            }
-            viewModel.adapter?.notifyDataSetChanged()
-        }
-
-        // Observe the visualization to transform the list to grid and vice versa.
-        requireActivity().toMainActivity()?.visualization?.observe(this.viewLifecycleOwner) { visualization ->
-            visualization ?: return@observe
-            recycler?.let { rec ->
-                if (rec.itemDecorationCount != 0) rec.removeItemDecorationAt(0)
-                if (rec.layoutManager as? GridLayoutManager == null) {
-                    rec.layoutManager = GridLayoutManager(requireContext(), 1, RecyclerView.VERTICAL, false)
-                }
-            }
-
-            when (visualization) {
-                MainActivity.Visualization.LIST -> {
-                    recycler?.let {
-                        (it.layoutManager as GridLayoutManager).spanCount = 1
-                        it.addItemDecoration(LinearSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_space)))
-                    }
-                }
-                MainActivity.Visualization.GRID -> {
-                    recycler?.let {
-                        (it.layoutManager as GridLayoutManager).spanCount = 2
-                        it.addItemDecoration(GridSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_space)))
-                    }
-                }
-            }
-            viewModel.adapter?.notifyDataSetChanged()
-        }
-    }
-
-    /**
-     * Sort the list by the pokemon id.
-     */
-    private fun sortById() {
-        viewModel.pokemonList.sortBy { pokemon ->
-            pokemon.url?.getIdFromUrl()
-        }
-    }
-
-    /**
-     * Sort the list by the pokemon name.
-     */
-    private fun sortByName() {
-        viewModel.pokemonList.sortBy { pokemon ->
-            pokemon.name
         }
     }
 
@@ -146,19 +86,12 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
             Timber.d("Observer the dataInfo object. It contains ${it.data?.pokemonList?.size ?: 0} pokemon")
             viewModel.pokemonList.addAll(it.data?.pokemonList ?: emptyList())
 
-            // Sort by name
-            if (requireActivity().toMainActivity()?.sorting?.value == MainActivity.Sorting.AZ) {
-                sortByName()
-            } else {
-                sortById()
-            }
-
             // Refresh the adapter.
             viewModel.adapter?.notifyDataSetChanged()
 
             // Tells the recyclerView that the items are loaded,
             // to continue to use the loadMore functionality.
-            recycler?.loadMoreComplete()
+            binding?.recycler?.loadMoreComplete()
         }
     }
 
@@ -173,18 +106,11 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
             viewModel.pokemonList.clear()
             viewModel.pokemonList.addAll(it.data?.pokemonList ?: emptyList())
 
-            // Sort by name
-            if (requireActivity().toMainActivity()?.sorting?.value == MainActivity.Sorting.AZ) {
-                sortByName()
-            } else {
-                sortById()
-            }
-
             // Refresh the adapter.
             viewModel.adapter?.notifyDataSetChanged()
 
             // Tells the recyclerView that the items are refreshed.
-            recycler?.refreshComplete()
+            binding?.recycler?.refreshComplete()
         }
     }
 

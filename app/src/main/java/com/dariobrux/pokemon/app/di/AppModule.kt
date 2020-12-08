@@ -2,15 +2,13 @@ package com.dariobrux.pokemon.app.di
 
 import android.content.Context
 import androidx.datastore.preferences.createDataStore
-import androidx.lifecycle.MutableLiveData
 import com.dariobrux.pokemon.app.BuildConfig
-import com.dariobrux.pokemon.app.ui.MainActivity
+import com.dariobrux.pokemon.app.data.local.PokemonDao
+import com.dariobrux.pokemon.app.data.local.PokemonDatabase
 import com.dariobrux.pokemon.app.data.remote.PokemonApiHelper
 import com.dariobrux.pokemon.app.data.remote.PokemonDataApiHelper
 import com.dariobrux.pokemon.app.data.remote.PokemonDataService
 import com.dariobrux.pokemon.app.data.remote.PokemonService
-import com.dariobrux.pokemon.app.data.local.PokemonDao
-import com.dariobrux.pokemon.app.data.local.PokemonDatabase
 import com.dariobrux.pokemon.app.other.Constants
 import com.dariobrux.pokemon.app.ui.info.InfoRepository
 import com.dariobrux.pokemon.app.ui.main.MainRepository
@@ -39,14 +37,6 @@ object AppModule {
     @Singleton
     @Provides
     fun provideLocalStorage(@ApplicationContext context: Context) = context.createDataStore(name = "sample")
-
-    @Singleton
-    @Provides
-    fun provideVisualization() = MutableLiveData(MainActivity.Visualization.LIST)
-
-    @Singleton
-    @Provides
-    fun provideSorting() = MutableLiveData(MainActivity.Sorting.NUM)
 
     @Provides
     fun provideBaseUrl() = Constants.BASE_URL

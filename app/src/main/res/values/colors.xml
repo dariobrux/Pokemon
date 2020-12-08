@@ -9,4 +9,7 @@
     <color name="day">#EF5350</color>
     <color name="dark">#581845</color>
 
+    <color name="red_400">#ef5350</color>
+    <color name="blue_gray_900">#263238</color>
+
 </resources>
