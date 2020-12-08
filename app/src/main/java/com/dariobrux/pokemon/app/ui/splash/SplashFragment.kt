@@ -44,7 +44,7 @@ class SplashFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         activityScope.launch {
-            delay(3000)
+            delay(500)
             NavHostFragment.findNavController(this@SplashFragment).navigate(R.id.action_splashFragment_to_mainFragment)
         }
     }

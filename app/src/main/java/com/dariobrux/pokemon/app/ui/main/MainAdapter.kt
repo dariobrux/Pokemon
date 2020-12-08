@@ -38,7 +38,6 @@ class MainAdapter(private val context: Context, var items: MutableList<PokemonEn
 
     inner class PokemonViewHolder(private val binding: ItemPokemonBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PokemonEntity) = with(binding) {
-            card.animate().scaleX(1f).scaleY(1f).setDuration(200).start()
             txt.text = item.name.capitalize(Locale.getDefault())
             img.loadImage(context, item.images.first().url) {
                 card.setCardBackgroundColor(it.changeAlpha(220))

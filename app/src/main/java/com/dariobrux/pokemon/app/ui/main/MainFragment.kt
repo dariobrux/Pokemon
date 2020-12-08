@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dariobrux.pokemon.app.R
 import com.dariobrux.pokemon.app.common.Resource
+import com.dariobrux.pokemon.app.common.extensions.toGone
+import com.dariobrux.pokemon.app.common.extensions.toVisible
 import com.dariobrux.pokemon.app.data.local.model.PokemonEntity
 import com.dariobrux.pokemon.app.databinding.FragmentMainBinding
-import com.dariobrux.pokemon.app.ui.util.GridSpaceItemDecoration
+import com.dariobrux.pokemon.app.ui.util.PokemonSpaceItemDecoration
 import com.jcodecraeer.xrecyclerview.ProgressStyle
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,15 +62,15 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        getPokemonList()
+
         binding?.mainRecycler?.let {
             it.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
-            it.addItemDecoration(GridSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_padding)))
+            it.addItemDecoration(PokemonSpaceItemDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.regular_padding)))
             it.setLoadingMoreProgressStyle(ProgressStyle.Pacman)
             it.adapter = adapter
             it.setLoadingListener(this)
         }
-
-        getPokemonList()
     }
 
     override fun onDestroy() {
@@ -82,16 +84,26 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
     private fun getPokemonList() {
         viewModel.getPokemonList().observe(this.viewLifecycleOwner) {
 
-            if (it.status == Resource.Status.SUCCESS) {
+            when (it.status) {
+                Resource.Status.LOADING -> {
+                    showLoading()
+                }
+                Resource.Status.SUCCESS -> {
 
-                val pokemonList = it.data ?: listOf()
-                Timber.d("Observer the dataInfo object. It contains ${pokemonList.size} pokemon")
+                    val pokemonList = it.data ?: listOf()
+                    Timber.d("Observer the dataInfo object. It contains ${pokemonList.size} pokemon")
 
-                adapter?.let { adapter ->
-                    adapter.items.addAll(pokemonList)
-                    adapter.notifyDataSetChanged()
+                    adapter?.let { adapter ->
+                        adapter.items.addAll(pokemonList)
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+                else -> {
+                    // Do nothing
                 }
             }
+
+            hideLoading()
 
             // Tells the recyclerView that the items are loaded,
             // to continue to use the loadMore functionality.
@@ -116,6 +128,30 @@ class MainFragment : Fragment(), XRecyclerView.LoadingListener, MainAdapter.OnPo
 //            // Tells the recyclerView that the items are refreshed.
 //            binding?.mainRecycler?.refreshComplete()
 //        }
+    }
+
+    private fun hideLoading() {
+        binding?.let { bind ->
+            bind.pikachu.toGone()
+            bind.loading.toGone()
+            bind.mask.toGone()
+        }
+    }
+
+    private fun showLoading() {
+        binding?.let { bind ->
+            bind.pikachu.toVisible()
+            rotatePikachu()
+
+            bind.loading.toVisible()
+            bind.mask.toVisible()
+        }
+    }
+
+    private fun rotatePikachu() {
+        binding?.pikachu?.animate()?.rotationYBy(180f)?.setDuration(0)?.setStartDelay(500)?.withEndAction {
+            rotatePikachu()
+        }?.start()
     }
 
     /**

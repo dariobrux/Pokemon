@@ -9,4 +9,5 @@
     <dimen name="regular_progress_height">100dp</dimen>
     <dimen name="medium_padding">40dp</dimen>
     <dimen name="small_padding">10dp</dimen>
+    <dimen name="regular_elevation">8dp</dimen>
 </resources>
