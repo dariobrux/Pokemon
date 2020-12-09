@@ -1,7 +1,6 @@
 package com.dariobrux.pokemon.app.di
 
 import android.content.Context
-import androidx.datastore.preferences.createDataStore
 import com.dariobrux.pokemon.app.BuildConfig
 import com.dariobrux.pokemon.app.common.Constants
 import com.dariobrux.pokemon.app.data.local.PokemonDAO
@@ -9,11 +8,12 @@ import com.dariobrux.pokemon.app.data.local.PokemonDatabase
 import com.dariobrux.pokemon.app.data.remote.PokemonApiHelper
 import com.dariobrux.pokemon.app.data.remote.PokemonService
 import com.dariobrux.pokemon.app.ui.main.MainRepository
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -28,12 +28,8 @@ import javax.inject.Singleton
  *
  */
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 object AppModule {
-
-    @Singleton
-    @Provides
-    fun provideLocalStorage(@ApplicationContext context: Context) = context.createDataStore(name = "sample")
 
     @Provides
     fun provideBaseUrl() = Constants.BASE_URL

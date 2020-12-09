@@ -1,10 +1,7 @@
 package com.dariobrux.pokemon.app.ui.main
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.dariobrux.pokemon.app.common.Resource
-import com.dariobrux.pokemon.app.data.local.model.PokemonEntity
 
 /**
  *

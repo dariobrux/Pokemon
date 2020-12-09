@@ -2,12 +2,8 @@ package com.dariobrux.pokemon.app.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.datastore.DataStore
-import androidx.datastore.preferences.Preferences
 import com.dariobrux.pokemon.app.R
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
-
 
 /**
  *
@@ -22,9 +18,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
-    @Inject
-    lateinit var dataStore: DataStore<Preferences>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
